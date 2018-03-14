@@ -38,12 +38,24 @@ class WPCOM_Compat_Command extends WPCOM_VIP_CLI_Command {
 		$rows = fgetcsv( $fd );
 
 		global $wpdb;
+		$success = 0;
+		$errors = 0;
 		foreach ( $rows as $row ) {
 			$insert = $wpdb->insert( 'protected_embeds', $row );
 			if ( ! $insert ) {
 				WP_CLI::warning( "Could not insert embed: `{$row['id']}`" );
 				WP_CLI::warning( $wpdb->last_error );
+				$errors++;
+			} else {
+				$success++;
 			}
+		}
+		
+		if ( $errors < 1 ) {
+			WP_CLI::success( 'Inserted all embeds without errors' );
+		} else {
+			WP_CLI::line( sprintf( 'Successfully inserted %d embeds', $success ) );
+			WP_CLI::line( sprintf( 'Failed to insert %d embeds', $errors ) );
 		}
 	}
 }
