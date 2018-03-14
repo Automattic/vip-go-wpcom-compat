@@ -37,10 +37,12 @@ class WPCOM_Compat_Command extends WPCOM_VIP_CLI_Command {
 		$fd = fopen( $file, 'r' );
 		$rows = fgetcsv( $fd );
 
+		global $wpdb;
 		foreach ( $rows as $row ) {
 			$insert = $wpdb->insert( 'protected_embeds', $row );
 			if ( ! $insert ) {
 				WP_CLI::warning( "Could not insert embed: `{$row['id']}`" );
+				WP_CLI::warning( $wpdb->last_error );
 			}
 		}
 	}
