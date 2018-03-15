@@ -44,7 +44,7 @@ class WPCOM_Compat_Command extends WPCOM_VIP_CLI_Command {
 			'`time_added` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP, ' .
 			'PRIMARY KEY (`id`), ' .
 			'UNIQUE KEY `embed_id` (`embed_id`) ' .
-			') ENGINE=InnoDB AUTO_INCREMENT=0 DEFAULT CHARSET=latin1';
+			') ENGINE=InnoDB AUTO_INCREMENT=0';
 
 		require_once( ABSPATH . 'wp-admin/includes/upgrade.php' );
 		$q = dbDelta( $sql );
