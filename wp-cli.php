@@ -37,15 +37,24 @@ class WPCOM_Compat_Command extends WPCOM_VIP_CLI_Command {
 		WP_CLI::line( $q[ 'protected_embeds' ] );
 
 		$fd = fopen( $file, 'r' );
-		$rows = fgetcsv( $fd );
+		if ( ! $fd ) {
+			WP_CLI::error( sprintf( 'Could not open file: %s', $file ) );
+		}
+
+		$header = fgetcsv( $fd );
 
 		global $wpdb;
 		$success = 0;
 		$errors = 0;
-		foreach ( $rows as $row ) {
-			$insert = $wpdb->insert( 'protected_embeds', $row );
+		while( $row = fgetcsv( $fd ) ) {
+			$data = array_combine( $header, $row );
+			if ( empty( $data ) || ! $data['id'] ) {
+				continue;
+			}
+
+			$insert = $wpdb->insert( 'protected_embeds', $data );
 			if ( ! $insert ) {
-				WP_CLI::warning( "Could not insert embed: `{$row['id']}`" );
+				WP_CLI::warning( "Could not insert embed: `{$data['id']}`" );
 				WP_CLI::warning( $wpdb->last_error );
 				$errors++;
 			} else {
