@@ -70,3 +70,5 @@ class WPCOM_Compat_Command extends WPCOM_VIP_CLI_Command {
 		}
 	}
 }
+
+WP_CLI::add_command( 'wpcom-compat', new WPCOM_Compat_Command );
