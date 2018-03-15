@@ -19,7 +19,22 @@ class WPCOM_Compat_Command extends WPCOM_VIP_CLI_Command {
 			WP_CLI::error( 'Specified file does not exist' );
 		}
 
-		
+		$fd = fopen( $file, 'r' );
+		if ( ! $fd ) {
+			WP_CLI::error( sprintf( 'Could not open file: %s', $file ) );
+		}
+
+		$header = fgetcsv( $fd );
+		if ( ! is_array( $header ) || count( $header ) !== 6 ||
+			! in_array( 'id', $header ) ||
+			! in_array( 'embed_id', $header ) ||
+			! in_array( 'src', $header ) ||
+			! in_array( 'embed_group_id' ) ||
+			! in_array( 'html' ) ||
+			! in_array( 'time_added' ) ) {
+			WP_CLI::error( 'Invalid CSV, missing required fields' );
+		}
+
 		$sql = 'CREATE TABLE `protected_embeds` ( ' .
 			'`id` bigint(20) unsigned NOT NULL AUTO_INCREMENT, ' .
 			'`embed_id` varchar(64) NOT NULL, ' .
@@ -33,15 +48,7 @@ class WPCOM_Compat_Command extends WPCOM_VIP_CLI_Command {
 
 		require_once( ABSPATH . 'wp-admin/includes/upgrade.php' );
 		$q = dbDelta( $sql );
-
 		WP_CLI::line( $q[ 'protected_embeds' ] );
-
-		$fd = fopen( $file, 'r' );
-		if ( ! $fd ) {
-			WP_CLI::error( sprintf( 'Could not open file: %s', $file ) );
-		}
-
-		$header = fgetcsv( $fd );
 
 		global $wpdb;
 		$success = 0;
@@ -61,7 +68,7 @@ class WPCOM_Compat_Command extends WPCOM_VIP_CLI_Command {
 				$success++;
 			}
 		}
-		
+
 		if ( $errors < 1 ) {
 			WP_CLI::success( 'Inserted all embeds without errors' );
 		} else {
