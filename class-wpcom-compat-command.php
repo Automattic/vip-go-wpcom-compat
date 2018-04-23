@@ -134,20 +134,20 @@ class WPCOM_Compat_Command extends WPCOM_VIP_CLI_Command {
 		} );
 
 		// Query for posts with the protected-iframe shortcode
-		WP_CLI::line( "Looking for posts with protected-iframe shortcode." );
+		WP_CLI::line( 'Looking for posts with protected-iframe shortcode.' );
 
 		global $wpdb;
 		$query = $wpdb->get_results("SELECT ID, post_content FROM $wpdb->posts WHERE `post_content` LIKE '%protected-iframe%'" );
 
 		$affected = 0;
 
-		WP_CLI::line( sprintf( "Found %d posts.", count( $query ) ) );
+		WP_CLI::line( sprintf( 'Found %d posts.', count( $query ) ) );
 		sleep( 3 );
 
 		foreach ( $query as $post ) {
 
 			// Post does not have a protected-iframe, skip it
-			if ( strpos( $post->post_content, "protected-iframe" ) === false ) {
+			if ( strpos( $post->post_content, 'protected-iframe' ) === false ) {
 				continue;
 			}
 
@@ -159,21 +159,21 @@ class WPCOM_Compat_Command extends WPCOM_VIP_CLI_Command {
 			$update = $wpdb->update( $wpdb->posts, array( 'post_content' => stripslashes( $parsed_content ) ), array( 'ID' => $post->ID ) );
 
 			if ( ! $update ) {
-				WP_CLI::error( sprintf( "Error updating %d. Aborting. Updated %d posts so far.", $post->ID, $affected ) );
+				WP_CLI::error( sprintf( 'Error updating %d. Aborting. Updated %d posts so far.', $post->ID, $affected ) );
 				return;
 			}
 
 			$affected++;
 
 			if ( $affected % 100 == 0 ) {
-				WP_CLI::line( "100 posts updated. Waiting 1 second..." );
+				WP_CLI::line( '100 posts updated. Waiting 1 second...' );
 				$this->stop_the_insanity();
 				sleep( 1 );
 			}
 
 		}
 
-		WP_CLI::success( sprintf( "Done! %d posts updated.", $affected ) );
+		WP_CLI::success( sprintf( 'Done! %d posts updated.', $affected ) );
 	}
 }
 
