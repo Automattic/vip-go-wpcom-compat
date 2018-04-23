@@ -103,12 +103,12 @@ class WPCOM_Compat_Command extends WPCOM_VIP_CLI_Command {
 
 		$header = fgetcsv( $fd );
 		if ( ! is_array( $header ) || count( $header ) !== 6 ||
-		     ! in_array( 'id', $header, true ) ||
-		     ! in_array( 'embed_id', $header, true ) ||
-		     ! in_array( 'src', $header, true ) ||
-		     ! in_array( 'embed_group_id', $header, true ) ||
-		     ! in_array( 'html', $header, true ) ||
-		     ! in_array( 'time_added', $header, true ) ) {
+			 ! in_array( 'id', $header, true ) ||
+			 ! in_array( 'embed_id', $header, true ) ||
+			 ! in_array( 'src', $header, true ) ||
+			 ! in_array( 'embed_group_id', $header, true ) ||
+			 ! in_array( 'html', $header, true ) ||
+			 ! in_array( 'time_added', $header, true ) ) {
 			WP_CLI::error( 'Invalid CSV, missing required fields' );
 		}
 
