@@ -129,7 +129,7 @@ class WPCOM_Compat_Command extends WPCOM_VIP_CLI_Command {
 		$shortcode_tags = array();
 
 		// Add custom protected-iframe handler
-		add_shortcode( 'protected-iframe', function( $attrs ) use( $protected_embeds ) {
+		add_shortcode( 'protected-iframe', function ( $attrs ) use ( $protected_embeds ) {
 			return $protected_embeds[ $attrs['id'] ]['html'];
 		} );
 
@@ -137,7 +137,7 @@ class WPCOM_Compat_Command extends WPCOM_VIP_CLI_Command {
 		WP_CLI::line( 'Looking for posts with protected-iframe shortcode.' );
 
 		global $wpdb;
-		$query = $wpdb->get_results("SELECT ID, post_content FROM $wpdb->posts WHERE `post_content` LIKE '%protected-iframe%'" );
+		$query = $wpdb->get_results( "SELECT ID, post_content FROM $wpdb->posts WHERE `post_content` LIKE '%protected-iframe%'" );
 
 		$affected = 0;
 
@@ -145,7 +145,6 @@ class WPCOM_Compat_Command extends WPCOM_VIP_CLI_Command {
 		sleep( 3 );
 
 		foreach ( $query as $post ) {
-
 			// Post does not have a protected-iframe, skip it
 			if ( strpos( $post->post_content, 'protected-iframe' ) === false ) {
 				continue;
@@ -170,7 +169,6 @@ class WPCOM_Compat_Command extends WPCOM_VIP_CLI_Command {
 				$this->stop_the_insanity();
 				sleep( 1 );
 			}
-
 		}
 
 		WP_CLI::success( sprintf( 'Done! %d posts updated.', $affected ) );
