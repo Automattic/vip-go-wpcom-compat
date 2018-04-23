@@ -164,7 +164,7 @@ class WPCOM_Compat_Command extends WPCOM_VIP_CLI_Command {
 
 			$affected++;
 
-			if ( $affected % 100 == 0 ) {
+			if ( 0 === $affected % 100 ) {
 				WP_CLI::line( '100 posts updated. Waiting 1 second...' );
 				$this->stop_the_insanity();
 				sleep( 1 );
