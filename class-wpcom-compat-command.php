@@ -181,6 +181,9 @@ class WPCOM_Compat_Command extends WPCOM_VIP_CLI_Command {
 				sleep( 1 );
 			}
 		}
+		
+		WP_CLI::line('Clearing cache...');
+		wp_cache_flush();
 
 		WP_CLI::success( sprintf( 'Done! %d posts updated.', $affected ) );
 	}
