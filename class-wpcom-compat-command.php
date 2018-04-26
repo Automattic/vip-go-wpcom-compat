@@ -151,8 +151,7 @@ class WPCOM_Compat_Command extends WPCOM_VIP_CLI_Command {
 		$affected = 0;
 
 		WP_CLI::line( sprintf( 'Found %d posts.', count( $query ) ) );
-		sleep( 3 );
-
+		
 		foreach ( $query as $post ) {
 			// Post does not have a protected-iframe, skip it
 			if ( strpos( $post->post_content, '[protected-iframe' ) === false ) {
