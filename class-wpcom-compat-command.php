@@ -166,7 +166,7 @@ class WPCOM_Compat_Command extends WPCOM_VIP_CLI_Command {
 			WP_CLI::line( " * Found {$post->ID}. Updating post content..." );
 
 			// Update the post using $wpdb, to bypass any filters/options being called on `wp_insert_post`.
-			$update = $wpdb->update( $wpdb->posts, array( 'post_content' => stripslashes( $parsed_content ) ), array( 'ID' => $post->ID ) );
+			$update = $wpdb->update( $wpdb->posts, array( 'post_content' => $parsed_content ), array( 'ID' => $post->ID ) );
 
 			if ( ! $update ) {
 				WP_CLI::error( sprintf( 'Error updating %d. Aborting. Updated %d posts so far.', $post->ID, $affected ) );
