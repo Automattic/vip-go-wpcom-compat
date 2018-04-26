@@ -146,7 +146,7 @@ class WPCOM_Compat_Command extends WPCOM_VIP_CLI_Command {
 		WP_CLI::line( 'Looking for posts with protected-iframe shortcode.' );
 
 		global $wpdb;
-		$query = $wpdb->get_results( "SELECT ID, post_content FROM $wpdb->posts WHERE `post_content` LIKE '%protected-iframe%'" );
+		$query = $wpdb->get_results( "SELECT ID, post_content FROM $wpdb->posts WHERE `post_content` LIKE '%[protected-iframe%'" );
 
 		$affected = 0;
 
@@ -155,7 +155,7 @@ class WPCOM_Compat_Command extends WPCOM_VIP_CLI_Command {
 
 		foreach ( $query as $post ) {
 			// Post does not have a protected-iframe, skip it
-			if ( strpos( $post->post_content, 'protected-iframe' ) === false ) {
+			if ( strpos( $post->post_content, '[protected-iframe' ) === false ) {
 				continue;
 			}
 
