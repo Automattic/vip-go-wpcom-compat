@@ -81,11 +81,20 @@ class WPCOM_Compat_Command extends WPCOM_VIP_CLI_Command {
 	 * Replace existent protected embeds from WordPress.com
 	 *
 	 * This will replace all the protected-iframe shortcodes with the correct rendered embed.
+	 * 
+	 * To generate the CSV file with all the protected embeds, the following command can be used:
+	 * 
+	 * 		wp vip export-protected-embeds --url= > site-protected-embeds.csv
 	 *
 	 * # OPTIONS
 	 *
 	 * <file>
 	 *  : The CSV file with protected embeds
+	 *
+	 * ## EXAMPLES
+	 *
+	 *     # Replaces all the protected-iframe shortcodes with the respective HTML
+	 *     $ wp wpcom-compat import-user-meta replace-protected-embeds site-protected-embeds.csv
 	 *
 	 * @subcommand replace-protected-embeds
 	 */
