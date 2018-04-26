@@ -78,18 +78,18 @@ class WPCOM_Compat_Command extends WPCOM_VIP_CLI_Command {
 	}
 
 	/**
-	 * Parses existent protected embeds from WordPress.com
+	 * Replace existent protected embeds from WordPress.com
 	 *
-	 * This will replace all the protected-iframe shortcodes with the correct rendered embed
+	 * This will replace all the protected-iframe shortcodes with the correct rendered embed.
 	 *
 	 * # OPTIONS
 	 *
 	 * <file>
 	 *  : The CSV file with protected embeds
 	 *
-	 * @subcommand parse-protected-embeds
+	 * @subcommand replace-protected-embeds
 	 */
-	function parse_protected_embeds( $args ) {
+	function replace_protected_embeds( $args ) {
 		$file = $args[0];
 
 		if ( ! file_exists( $file ) ) {
