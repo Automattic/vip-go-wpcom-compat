@@ -139,7 +139,10 @@ class WPCOM_Compat_Command extends WPCOM_VIP_CLI_Command {
 
 		// Add custom protected-iframe handler
 		add_shortcode( 'protected-iframe', function ( $attrs ) use ( $protected_embeds ) {
-			return $protected_embeds[ $attrs['id'] ]['html'];
+			if ( isset( $attrs['id'] ) && isset( $protected_embeds[ $attrs['id'] ] ) ) {
+				return $protected_embeds[ $attrs['id'] ]['html'];
+			}
+			return '<!-- Invalid protected-iframe shortcode replacement -->';
 		} );
 
 		// Query for posts with the protected-iframe shortcode
