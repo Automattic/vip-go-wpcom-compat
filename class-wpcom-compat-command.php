@@ -152,6 +152,7 @@ class WPCOM_Compat_Command extends WPCOM_VIP_CLI_Command {
 		$query = $wpdb->get_results( "SELECT ID, post_content FROM $wpdb->posts WHERE `post_content` LIKE '%[protected-iframe%'" );
 
 		$affected = 0;
+		$errors = array();
 
 		WP_CLI::line( sprintf( 'Found %d posts.', count( $query ) ) );
 
@@ -169,8 +170,9 @@ class WPCOM_Compat_Command extends WPCOM_VIP_CLI_Command {
 			$update = $wpdb->update( $wpdb->posts, array( 'post_content' => $parsed_content ), array( 'ID' => $post->ID ) );
 
 			if ( ! $update ) {
-				WP_CLI::error( sprintf( 'Error updating %d. Aborting. Updated %d posts so far.', $post->ID, $affected ) );
-				return;
+				WP_CLI::warning( sprintf( 'Error updating %d. Skipping...', $post->ID, $affected ) );
+				$errors[] = $post->ID;
+				continue;
 			}
 
 			$affected++;
@@ -185,7 +187,11 @@ class WPCOM_Compat_Command extends WPCOM_VIP_CLI_Command {
 		WP_CLI::line('Clearing cache...');
 		wp_cache_flush();
 
-		WP_CLI::success( sprintf( 'Done! %d posts updated.', $affected ) );
+		if ( ! empty( $errors ) ) {
+			WP_CLI::warning( 'There were %d posts that failed to be updated: %s', count($errors), implode(", ", $errors ) );
+		}
+
+		WP_CLI::success( sprintf( 'Done! %d posts updated, %d posts failed.', $affected, count( $errors ) ) );
 	}
 }
 
