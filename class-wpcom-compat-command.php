@@ -151,7 +151,8 @@ class WPCOM_Compat_Command extends WPCOM_VIP_CLI_Command {
 		global $wpdb;
 		$query = $wpdb->get_results( "SELECT ID, post_content FROM $wpdb->posts WHERE `post_content` LIKE '%[protected-iframe%'" );
 
-		$affected = 0;
+		$updated = 0;
+		$processed = 0;
 		$errors = array();
 
 		WP_CLI::line( sprintf( 'Found %d posts.', count( $query ) ) );
@@ -162,6 +163,8 @@ class WPCOM_Compat_Command extends WPCOM_VIP_CLI_Command {
 				continue;
 			}
 
+			$processed++;
+
 			$parsed_content = do_shortcode( $post->post_content );
 
 			WP_CLI::line( " * Found {$post->ID}. Updating post content..." );
@@ -170,28 +173,31 @@ class WPCOM_Compat_Command extends WPCOM_VIP_CLI_Command {
 			$update = $wpdb->update( $wpdb->posts, array( 'post_content' => $parsed_content ), array( 'ID' => $post->ID ) );
 
 			if ( ! $update ) {
-				WP_CLI::warning( sprintf( 'Error updating %d. Skipping...', $post->ID, $affected ) );
+				WP_CLI::warning( sprintf( 'Error updating %d. Skipping...', $post->ID, $updated ) );
 				$errors[] = $post->ID;
 				continue;
 			}
 
-			$affected++;
+			$updated++;
 
-			if ( 0 === $affected % 100 ) {
-				WP_CLI::line( '100 posts updated. Waiting 1 second...' );
+			if ( 0 === $processed % 100 ) {
+				WP_CLI::line( sprintf( '%d of %d (%d%%) posts updated. Waiting 1 second...',
+					$processed,
+					count( $query ),
+					$processed * 100 / count( $query ) ) );
 				$this->stop_the_insanity();
 				sleep( 1 );
 			}
 		}
 		
-		WP_CLI::line('Clearing cache...');
+		WP_CLI::line( 'Clearing cache...' );
 		wp_cache_flush();
 
 		if ( ! empty( $errors ) ) {
-			WP_CLI::warning( 'There were %d posts that failed to be updated: %s', count($errors), implode(", ", $errors ) );
+			WP_CLI::warning( sprintf( 'There were %d posts that failed to be updated: %s', count($errors), implode(", ", $errors ) ) );
 		}
 
-		WP_CLI::success( sprintf( 'Done! %d posts updated, %d posts failed.', $affected, count( $errors ) ) );
+		WP_CLI::success( sprintf( 'Done! %d posts updated, %d posts failed.', $updated, count( $errors ) ) );
 	}
 }
 
