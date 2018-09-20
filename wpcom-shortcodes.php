@@ -4,14 +4,10 @@ add_shortcode( 'protected-iframe', 'wpcom_compat_protected_iframe_shortcode' );
 
 function wpcom_compat_protected_iframe_shortcode( $attrs ) {
 	$attrs = wp_parse_args( $attrs, array(
-		'id'        => null,
-		'width'     => '',
-		'height'    => '',
-		'scrolling' => '',
-		'class'     => 'wpcom-protected-iframe',
+		'id' => null,
 	) );
 
-	$id    = $args['id'];
+	$id    = $attrs['id'];
 	$embed = wp_cache_get( $id, 'simple-protected-embeds' );
 
 	if ( false === $embed ) {
