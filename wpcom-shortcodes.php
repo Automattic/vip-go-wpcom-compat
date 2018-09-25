@@ -9,7 +9,8 @@
  */
 function wpcom_compat_protected_iframe_shortcode( $attrs ) {
 	$attrs = wp_parse_args(
-		$attrs, array(
+		$attrs,
+		array(
 			'id' => null,
 		)
 	);
