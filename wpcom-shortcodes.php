@@ -3,14 +3,16 @@
 /**
  * Provides simple backwards compatability with WordPress.com Protected Embeds.
  * This does NOT provide the "protection" of the protected embeds, just renders them.
- * 
+ *
  * If a site wants to use a different protected embeds plugin, they can by calling
  * `remove_shortcode( 'protected-iframe' )` before loading the other plugin.
  */
 function wpcom_compat_protected_iframe_shortcode( $attrs ) {
-	$attrs = wp_parse_args( $attrs, array(
-		'id' => null,
-	) );
+	$attrs = wp_parse_args(
+		$attrs, array(
+			'id' => null,
+		)
+	);
 
 	$id    = $attrs['id'];
 	$embed = wp_cache_get( $id, 'simple-protected-embeds' );
@@ -19,7 +21,7 @@ function wpcom_compat_protected_iframe_shortcode( $attrs ) {
 		global $wpdb;
 
 		$embed = $wpdb->get_row(
-			$wpdb->prepare( "SELECT html FROM `protected_embeds` WHERE `embed_id` = %s", $id )
+			$wpdb->prepare( 'SELECT html FROM `protected_embeds` WHERE `embed_id` = %s', $id )
 		);
 
 		if ( ! $embed ) {
