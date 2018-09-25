@@ -14,6 +14,13 @@ function wpcom_compat_protected_iframe_shortcode( $attrs ) {
 		)
 	);
 
+	$embed_table     = apply_filters( 'wpcom_protected_embed_table', 'protected_embeds' );
+	$embed_not_found = apply_filters( 'wpcom_protected_embed_not_found', '<!-- Embed not found -->' );
+
+	if ( ! $attrs['id'] ) {
+		return $embed_not_found;
+	}
+
 	$id    = $attrs['id'];
 	$embed = wp_cache_get( $id, 'simple-protected-embeds' );
 
@@ -21,11 +28,11 @@ function wpcom_compat_protected_iframe_shortcode( $attrs ) {
 		global $wpdb;
 
 		$embed = $wpdb->get_row(
-			$wpdb->prepare( 'SELECT html FROM `protected_embeds` WHERE `embed_id` = %s', $id )
+			$wpdb->prepare( 'SELECT html FROM `%s` WHERE `embed_id` = %s', $embed_table, $id )
 		);
 
 		if ( ! $embed ) {
-			return '<!-- Embed not found -->';
+			return $embed_not_found;
 		}
 
 		$embed = $embed->html;
@@ -33,6 +40,6 @@ function wpcom_compat_protected_iframe_shortcode( $attrs ) {
 		wp_cache_set( $id, $embed, 'simple-protected-embeds' );
 	}
 
-	return $embed;
+	return apply_filters( 'wpcom_protected_embed_html', $embed );
 }
 add_shortcode( 'protected-iframe', 'wpcom_compat_protected_iframe_shortcode' );
