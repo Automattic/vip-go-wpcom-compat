@@ -6,7 +6,7 @@ This plugin provides compatibility for sites that are moving from WordPress.com 
 
 The following functions are deprecated on VIP Go and are added as shims to keep themes and plugins from throwing fatal errors:
 
-* `wpcom_vip_load_wp_rest_api()` - Loads the built-in WP REST API endpoints in WordPress.com VIP context.
+* `wpcom_vip_load_wp_rest_api()` - Loads the built-in WP REST API endpoints in WordPress.com VIP context.  This function is not needed on VIP Go, or core WordPress to load the REST API and can be safely removed.
 
 ## Shortcodes
 
