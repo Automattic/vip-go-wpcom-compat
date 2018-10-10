@@ -19,3 +19,7 @@ The following shortcodes are either ported over from WordPress.com or are create
 The following custom WP-CLI commands exist in this plugin:
 
 * `wpcom-compat import-protected-embeds` - Imports "protected embeds" from a CSV file into the database table `protected_embeds`.
+
+## Plugins
+
+* [Writing Helper](https://github.com/Automattic/writing-helper) - "Helps you write your posts."  This plugin is a feature on WordPress.com that allows posts to be copied and for feedback to be requested.  This plugin can be disabled by calling `add_filter( 'wpcom_compat_enable_writing_helper', '__return_false' );` before loading the WordPress.com Compatibility mu-plugin.
