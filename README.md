@@ -19,3 +19,15 @@ The following shortcodes are either ported over from WordPress.com or are create
 The following custom WP-CLI commands exist in this plugin:
 
 * `wpcom-compat import-protected-embeds` - Imports "protected embeds" from a CSV file into the database table `protected_embeds`.
+
+## Convert plain text URLs in `post_content` to links on display.
+
+* [`make_clickable()`](https://core.trac.wordpress.org/browser/tags/4.9.8/src/wp-includes/formatting.php#L2608) is a function in WordPress Core that converts plain text URLs to HTML links.
+
+* `wpcom_make_content_clickable()` is the WordPress.com implementation. It uses `make_clickable()` conditionally, as that is an expensive function. This conversion of plain text URLs to HTML links is turned on by default on WordPress.com and VIP Go.
+
+* To turn off this behavior please use the following piece of code:
+```
+remove_filter( 'the_content', 'wpcom_make_content_clickable', 120 );
+remove_filter( 'the_excerpt', 'wpcom_make_content_clickable', 120 );
+```
