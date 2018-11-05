@@ -15,7 +15,7 @@ function wpcom_compat_protected_iframe_shortcode( $attrs ) {
 		)
 	);
 
-	$embed_table     = apply_filters( 'wpcom_protected_embed_table', 'protected_embeds' );
+	$embed_table     = apply_filters( 'wpcom_protected_embed_table', 'wp_protected_embeds' );
 	$embed_not_found = apply_filters( 'wpcom_protected_embed_not_found', '<!-- Embed not found -->' );
 
 	if ( ! $attrs['id'] ) {
