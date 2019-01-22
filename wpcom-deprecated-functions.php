@@ -38,3 +38,30 @@ function require_lib( $slug ) {
 		require_once( $lib );
 	}
 }
+
+/**
+ * @deprecated wpcom-geo-uniques has been re-implemented as vip-go-geo-uniques on VIP Go.
+ */
+function wpcom_geo_add_location( $location ) {
+	_deprecated_function( __FUNCTION__, '2.0.0' );
+	
+	return vip_geo_add_location( $location );
+}
+
+/**
+ * @deprecated wpcom-geo-uniques has been re-implemented as vip-go-geo-uniques on VIP Go.
+ */
+function wpcom_geo_get_user_location() {
+	_deprecated_function( __FUNCTION__, '2.0.0' );
+	
+	return vip_geo_get_country_code();
+}
+
+/**
+ * @deprecated wpcom-geo-uniques has been re-implemented as vip-go-geo-uniques on VIP Go.
+ */
+function wpcom_geo_set_default_location( $location ) {
+	_deprecated_function( __FUNCTION__, '2.0.0' );
+	
+	return vip_geo_set_default_location( $location );
+}
