@@ -52,9 +52,9 @@ function require_lib( $slug ) {
  * @return string Returns an HTML unordered list of related posts from the same blog.
  */
 function wpcom_vip_flaptor_related_posts( $max_num = 5, $additional_stopwords = array(), $exclude_own_titles = true ){
-    _deprecated_function( __FUNCTION__, '2.0.0' );
+	_deprecated_function( __FUNCTION__, '2.0.0' );
 
-    return '';
+	return '';
 }
 
 /**
@@ -73,7 +73,7 @@ function wpcom_vip_flaptor_related_posts( $max_num = 5, $additional_stopwords = 
  * @return array of related posts.
  */
 function wpcom_vip_get_flaptor_related_posts( $max_num = 5, $additional_stopwords = array(), $exclude_own_titles = true ) {
-    return array();
+	return array();
 }
 
 /**
@@ -83,7 +83,7 @@ function wpcom_vip_get_flaptor_related_posts( $max_num = 5, $additional_stopword
  * @deprecated Not applicable since VIP 2.0.0
  */
 function vip_admin_gallery_css_extras() {
-    _deprecated_function( __FUNCTION__, '2.0.0' );
+	_deprecated_function( __FUNCTION__, '2.0.0' );
 }
 
 /**
@@ -93,7 +93,7 @@ function vip_admin_gallery_css_extras() {
  * @see vip_admin_gallery_css_extras()
  */
 function _vip_admin_gallery_css_extras() {
-    _deprecated_function( __FUNCTION__, '2.0.0' );
+	_deprecated_function( __FUNCTION__, '2.0.0' );
 }
 
 /**
@@ -106,7 +106,7 @@ function _vip_admin_gallery_css_extras() {
  * @param array $colours Key/value array of colours to override
  */
 function wpcom_vip_audio_player_colors( $colors ) {
-    _deprecated_function( __FUNCTION__, '2.0.0' );
+	_deprecated_function( __FUNCTION__, '2.0.0' );
 }
 
 /**
@@ -117,7 +117,7 @@ function wpcom_vip_audio_player_colors( $colors ) {
  * @param int $days Optional. Number of recent days to find the most popular posts from. Minimum of 2.
  */
 function wpcom_vip_top_post_title( $days = 2 ) {
-    _deprecated_function( __FUNCTION__, '2.0.0' );
+	_deprecated_function( __FUNCTION__, '2.0.0' );
 }
 
 /**
@@ -129,7 +129,7 @@ function wpcom_vip_top_post_title( $days = 2 ) {
  * @author nickmomrik
  */
 function wpcom_vip_disable_youtube_comment_embeds() {
-    _deprecated_function( __FUNCTION__, '2.0.0' );
+	_deprecated_function( __FUNCTION__, '2.0.0' );
 }
 
 /**
@@ -140,7 +140,7 @@ function wpcom_vip_disable_youtube_comment_embeds() {
  * @deprecated Not applicable since VIP 2.0.0
  */
 function wpcom_vip_crop_small_thumbnail() {
-    _deprecated_function( __FUNCTION__, '2.0.0' );
+	_deprecated_function( __FUNCTION__, '2.0.0' );
 }
 
 /**
@@ -152,7 +152,7 @@ function wpcom_vip_crop_small_thumbnail() {
  * @deprecated Not applicable since VIP 2.0.0
  */
 function wpcom_vip_remove_mediacontent_from_rss2_feed() {
-    _deprecated_function( __FUNCTION__, '2.0.0' );
+	_deprecated_function( __FUNCTION__, '2.0.0' );
 }
 
 /**
@@ -166,7 +166,7 @@ function wpcom_vip_remove_mediacontent_from_rss2_feed() {
  * @link http://vip.wordpress.com/documentation/customizing-invites/ Customizing Invites
  */
 function wpcom_invite_force_matching_email_address() {
-    _deprecated_function( __FUNCTION__, '2.0.0' );
+	_deprecated_function( __FUNCTION__, '2.0.0' );
 }
 
 /**
@@ -184,9 +184,9 @@ function wpcom_invite_force_matching_email_address() {
  * @return mixed Value from get_post_meta
  */
 function wpcom_uncached_get_post_meta( $post_id, $key, $single = false ) {
-    _deprecated_function( __FUNCTION__, '2.0.0' );
+	_deprecated_function( __FUNCTION__, '2.0.0' );
 
-    return get_post_meta( $post_id, $key, $single );
+	return get_post_meta( $post_id, $key, $single );
 }
 
 /**
@@ -195,7 +195,7 @@ function wpcom_uncached_get_post_meta( $post_id, $key, $single = false ) {
  * @deprecated Not applicable since VIP 2.0.0
  */
 function wpcom_vip_disable_default_subscribe_to_comments() {
-    _deprecated_function( __FUNCTION__, '2.0.0' );
+	_deprecated_function( __FUNCTION__, '2.0.0' );
 }
 
 /**
@@ -204,8 +204,8 @@ function wpcom_vip_disable_default_subscribe_to_comments() {
  * @see wpcom_vip_allow_more_html_in_comments()
  */
 function _wpcom_vip_allow_more_html_in_comments() {
-    remove_filter( 'pre_comment_content', 'wp_filter_kses' );
-    add_filter( 'pre_comment_content', 'wp_filter_post_kses' );
+	remove_filter( 'pre_comment_content', 'wp_filter_kses' );
+	add_filter( 'pre_comment_content', 'wp_filter_post_kses' );
 }
 
 /**
@@ -215,7 +215,7 @@ function _wpcom_vip_allow_more_html_in_comments() {
  * @param array $emails Array of email address to notify when a user accepts an invitation to a site
  */
 function wpcom_vip_notify_on_new_user_added_to_site( $emails ) {
-    _deprecated_function( __FUNCTION__, '2.0.0' );
+	_deprecated_function( __FUNCTION__, '2.0.0' );
 }
 
 /**
@@ -225,11 +225,11 @@ function wpcom_vip_notify_on_new_user_added_to_site( $emails ) {
  * @see http://en.support.wordpress.com/geotagging/
  */
 function wpcom_vip_disable_geolocation_output() {
-    _deprecated_function( __FUNCTION__, '2.0.0' );
+	_deprecated_function( __FUNCTION__, '2.0.0' );
 }
 
 function wpcom_vip_debug( $type, $data ) {
-    _deprecated_function( __FUNCTION__, '2.0.0' );
+	_deprecated_function( __FUNCTION__, '2.0.0' );
 }
 
 /**
@@ -244,14 +244,14 @@ function wpcom_vip_debug( $type, $data ) {
  * @see wpcom_vip_file_get_contents
  */
 function vip_wp_file_get_content( $url, $echo_content = true, $timeout = 3 ) {
-    _deprecated_function( __FUNCTION__, '2.0.0', 'wpcom_vip_file_get_contents' );
+	_deprecated_function( __FUNCTION__, '2.0.0', 'wpcom_vip_file_get_contents' );
 
-    $output = wpcom_vip_file_get_contents( $url, $timeout );
+	$output = wpcom_vip_file_get_contents( $url, $timeout );
 
-    if ( $echo_content )
-        echo $output;
-    else
-        return $output;
+	if ( $echo_content )
+		echo $output;
+	else
+		return $output;
 }
 
 /**
@@ -261,7 +261,7 @@ function vip_wp_file_get_content( $url, $echo_content = true, $timeout = 3 ) {
  * @author mdawaffe
  */
 function vip_disable_tag_suggest() {
-    _deprecated_function( __FUNCTION__, '2.0.0' );
+	_deprecated_function( __FUNCTION__, '2.0.0' );
 }
 
 /**
@@ -270,7 +270,7 @@ function vip_disable_tag_suggest() {
  * @deprecated No longer supported since 2.0.0 - Use AdBusters https://github.com/Automattic/Adbusters/
  */
 function vip_doubleclick_dartiframe_redirect() {
-    _deprecated_function( __FUNCTION__, '2.0.0' );
+	_deprecated_function( __FUNCTION__, '2.0.0' );
 }
 
 /**
@@ -282,12 +282,12 @@ function vip_doubleclick_dartiframe_redirect() {
  * @deprecated No longer supported since 2.0.0
  */
 function wpcom_vip_meta_desc() {
-    _deprecated_function( __FUNCTION__, '2.0.0' );
+	_deprecated_function( __FUNCTION__, '2.0.0' );
 
-    $text = wpcom_vip_get_meta_desc();
-    if ( !empty( $text ) ) {
-        echo "\n<meta name=\"description\" content=\"$text\" />\n";
-    }
+	$text = wpcom_vip_get_meta_desc();
+	if ( !empty( $text ) ) {
+		echo "\n<meta name=\"description\" content=\"$text\" />\n";
+	}
 }
 
 /**
@@ -313,85 +313,85 @@ function wpcom_vip_meta_desc() {
  * @see wpcom_vip_meta_desc()
  */
 function wpcom_vip_get_meta_desc() {
-    _deprecated_function( __FUNCTION__, '2.0.0' );
+	_deprecated_function( __FUNCTION__, '2.0.0' );
 
-    $default_settings = array(
-        'length' => 25,              // amount of length units to use for the meta description
-        'length_unit' => 'word',     // the length unit can be either "word" or "char"
-        'use_excerpt' => true,       // if the post/page has an excerpt it will overwrite the generated description if this is set to true
-        'add_category_desc' => true, // add the category description to category views if this value is true
-        'add_tag_desc' => true,      // add the category description to category views if this value is true
-        'add_other_desc' => true,    // add the blog description/tagline to all other pages if this value is true
-        'default_description' => '', // in case no description is defined use this as a default description
-        'custom_field_key' => '',    // if a custom field key is set we try to use the value of this field as description
-    );
+	$default_settings = array(
+		'length' => 25,              // amount of length units to use for the meta description
+		'length_unit' => 'word',     // the length unit can be either "word" or "char"
+		'use_excerpt' => true,       // if the post/page has an excerpt it will overwrite the generated description if this is set to true
+		'add_category_desc' => true, // add the category description to category views if this value is true
+		'add_tag_desc' => true,      // add the category description to category views if this value is true
+		'add_other_desc' => true,    // add the blog description/tagline to all other pages if this value is true
+		'default_description' => '', // in case no description is defined use this as a default description
+		'custom_field_key' => '',    // if a custom field key is set we try to use the value of this field as description
+	);
 
-    $settings = apply_filters( 'wpcom_vip_meta_desc_settings', $default_settings );
+	$settings = apply_filters( 'wpcom_vip_meta_desc_settings', $default_settings );
 
-    extract( shortcode_atts( $default_settings, $settings ) );
+	extract( shortcode_atts( $default_settings, $settings ) );
 
-    global $wp_query;
+	global $wp_query;
 
-    if( is_single() || is_page() ) {
-        $post = $wp_query->post;
+	if( is_single() || is_page() ) {
+		$post = $wp_query->post;
 
-        // check for a custom field holding a description
-        if ( !empty( $custom_field_key ) ) {
-            $post_custom = get_post_custom_values( $custom_field_key, $post->ID );
-            if ( !empty( $post_custom ) )
-                $text = $post_custom[0];
-        }
-        // check for an excerpt we can use
-        elseif ( $use_excerpt && !empty( $post->post_excerpt ) ) {
-            $text = $post->post_excerpt;
-        }
-        // otherwise use the content
-        else {
-            $text = $post->post_content;
-        }
+		// check for a custom field holding a description
+		if ( !empty( $custom_field_key ) ) {
+			$post_custom = get_post_custom_values( $custom_field_key, $post->ID );
+			if ( !empty( $post_custom ) )
+				$text = $post_custom[0];
+		}
+		// check for an excerpt we can use
+		elseif ( $use_excerpt && !empty( $post->post_excerpt ) ) {
+			$text = $post->post_excerpt;
+		}
+		// otherwise use the content
+		else {
+			$text = $post->post_content;
+		}
 
-        $text = str_replace( array( "\r\n", "\r", "\n", "  " ), " ", $text ); // get rid of all line breaks
-        $text = strip_shortcodes( $text ); // make sure to get rid of shortcodes
-        $text = apply_filters( 'the_content', $text ); // make sure it's save
-        $text = trim( strip_tags( $text ) ); // get rid of tags and html fragments
-        if ( empty( $text ) && !empty( $default_description ) )
-            $text = $default_description;
+		$text = str_replace( array( "\r\n", "\r", "\n", "  " ), " ", $text ); // get rid of all line breaks
+		$text = strip_shortcodes( $text ); // make sure to get rid of shortcodes
+		$text = apply_filters( 'the_content', $text ); // make sure it's save
+		$text = trim( strip_tags( $text ) ); // get rid of tags and html fragments
+		if ( empty( $text ) && !empty( $default_description ) )
+			$text = $default_description;
 
-    } else if( is_category() && true == $add_category_desc ) {
-        $category = $wp_query->get_queried_object();
-        $text = trim( strip_tags( $category->category_description ) );
-        if ( empty( $text ) && !empty( $default_description ) )
-            $text = $default_description;
+	} else if( is_category() && true == $add_category_desc ) {
+		$category = $wp_query->get_queried_object();
+		$text = trim( strip_tags( $category->category_description ) );
+		if ( empty( $text ) && !empty( $default_description ) )
+			$text = $default_description;
 
-    } else if( is_tag() && true == $add_tag_desc ) {
-        $tag = $wp_query->get_queried_object();
-        $text = trim( strip_tags( $tag->description ) );
-        if ( empty( $text ) && !empty( $default_description ) )
-            $text = $default_description;
+	} else if( is_tag() && true == $add_tag_desc ) {
+		$tag = $wp_query->get_queried_object();
+		$text = trim( strip_tags( $tag->description ) );
+		if ( empty( $text ) && !empty( $default_description ) )
+			$text = $default_description;
 
-    } else if ( true == $add_other_desc ) {
-        $text = trim( strip_tags( get_bloginfo('description') ) );
-        if ( empty( $text ) && !empty( $default_description ) )
-            $text = $default_description;
-    }
+	} else if ( true == $add_other_desc ) {
+		$text = trim( strip_tags( get_bloginfo('description') ) );
+		if ( empty( $text ) && !empty( $default_description ) )
+			$text = $default_description;
+	}
 
-    if ( empty( $text ) )
-        return;
+	if ( empty( $text ) )
+		return;
 
-    if ( 'word' == $length_unit ) {
-        $words = explode(' ', $text, $length + 1);
-        if ( count( $words ) > $length ) {
-            array_pop( $words );
-            array_push( $words, '...' );
-            $text = implode( ' ', $words );
-        }
-    } else {
-        if ( strlen( $text ) > $length ) {
-            $text = mb_strimwidth( $text, 0, $length, '...' );
-        }
-    }
+	if ( 'word' == $length_unit ) {
+		$words = explode(' ', $text, $length + 1);
+		if ( count( $words ) > $length ) {
+			array_pop( $words );
+			array_push( $words, '...' );
+			$text = implode( ' ', $words );
+		}
+	} else {
+		if ( strlen( $text ) > $length ) {
+			$text = mb_strimwidth( $text, 0, $length, '...' );
+		}
+	}
 
-    return $text;
+	return $text;
 }
 
 /**
@@ -400,7 +400,7 @@ function wpcom_vip_get_meta_desc() {
  * @deprecated No longer supported since 2.0.0
  */
 function disable_right_now_comment_count() {
-    _deprecated_function( __FUNCTION__, '2.0.0' );
+	_deprecated_function( __FUNCTION__, '2.0.0' );
 }
 
 /**
@@ -411,9 +411,9 @@ function disable_right_now_comment_count() {
  * @return bool If current site_url() matches one in the list
  */
 function wpcom_vip_check_site_url( $site_urls ) {
-    _deprecated_function( __FUNCTION__, '2.0.0' );
+	_deprecated_function( __FUNCTION__, '2.0.0' );
 
-    return false;
+	return false;
 }
 
 /**
@@ -423,9 +423,9 @@ function wpcom_vip_check_site_url( $site_urls ) {
  * @param string $path The path of the file to get a URL for
  */
 function wpcom_vip_home_template_uri( $path ) {
-    _deprecated_function( __FUNCTION__, '2.0.0' );
+	_deprecated_function( __FUNCTION__, '2.0.0' );
 
-    return str_replace( site_url(), home_url(), get_template_directory_uri() . $path );
+	return str_replace( site_url(), home_url(), get_template_directory_uri() . $path );
 }
 
 /**
@@ -446,7 +446,7 @@ function wpcom_vip_home_template_uri( $path ) {
  * @return string Result format is CSV with one row per line and column names in first row.
  */
 function wpcom_vip_get_stats_csv( $table = 'views', $end_date = false, $num_days = 1, $and = '', $limit = 5, $summarize = NULL ) {
-    _deprecated_function( __FUNCTION__, '2.0.0' );
+	_deprecated_function( __FUNCTION__, '2.0.0' );
 }
 
 /**
@@ -463,24 +463,24 @@ function wpcom_vip_get_stats_csv( $table = 'views', $end_date = false, $num_days
  * @return string Result format is XML dataset.
  */
 function wpcom_vip_get_stats_xml( $table = 'views', $end_date = false, $num_days = 1, $and = '', $limit = 5, $summarize = NULL ) {
-    _deprecated_function( __FUNCTION__, '2.0.0' );
+	_deprecated_function( __FUNCTION__, '2.0.0' );
 
 	return null;
 }
 
 /**
-* Transitionary solution in migration from n to news namespace
-*
-* While we get all the VIP clients that have filters that changing the namespace
-* would impact we will convert n: to news: as late as possible.
-*
-* @deprecated No longer supported since 2.0.0
-* @param mixed $url
-*/
+ * Transitionary solution in migration from n to news namespace
+ *
+ * While we get all the VIP clients that have filters that changing the namespace
+ * would impact we will convert n: to news: as late as possible.
+ *
+ * @deprecated No longer supported since 2.0.0
+ * @param mixed $url
+ */
 function wpcom_sitemap_n_to_news_namespace( $url ) {
-    _deprecated_function( __FUNCTION__, '2.0.0' );
+	_deprecated_function( __FUNCTION__, '2.0.0' );
 
-    return null;
+	return null;
 }
 
 /**
@@ -507,9 +507,9 @@ function _wpcom_vip_load_plugin_sanitizer( $folder ) {
  * @return string|bool URL for the specified theme and path. If path doesn't exist, returns false.
  */
 function wpcom_vip_theme_url( $path = '', $theme = '' ) {
-    _deprecated_function( __FUNCTION__, '2.0.0', 'get_stylesheet_directory_uri' );
+	_deprecated_function( __FUNCTION__, '2.0.0', 'get_stylesheet_directory_uri' );
 
-    if ( empty( $theme ) )
+	if ( empty( $theme ) )
 		$theme = str_replace( 'vip/', '', get_stylesheet() );
 
 	// We need to reference a file in the specified theme; style.css will almost always be there.
