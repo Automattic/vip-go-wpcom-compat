@@ -30,13 +30,14 @@ function wpcom_vip_enable_https_canonical() {
  */
 function require_lib( $slug ) {
 	_deprecated_function( __FUNCTION__, '2.0.0' );
-	
+
 	// Attempt to offer minimal back-compat.
 	// If the lib happens to exist in client-mu-plugins/lib, load it.
 	$lib = WPCOM_VIP_CLIENT_MU_PLUGIN_DIR . '/lib/' . $slug . '/' . $slug . '.php';
 	if ( file_exists( $lib ) ) {
 		require_once( $lib );
 	}
+}
 
 /**
  * VIP Legacy Related Posts (HTML formatted results)
