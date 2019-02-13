@@ -38,3 +38,10 @@ function require_lib( $slug ) {
 		require_once( $lib );
 	}
 }
+
+/*
+ * @deprecated Not applicable on VIP Go
+ */
+function vip_goog_stats( $deprecated = null ) {
+	_deprecated_function( __FUNCTION__, '2.0.0' );
+}
