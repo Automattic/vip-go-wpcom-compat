@@ -45,3 +45,16 @@ function require_lib( $slug ) {
 function vip_goog_stats( $deprecated = null ) {
 	_deprecated_function( __FUNCTION__, '2.0.0' );
 }
+
+/*
+ * Remove MP6 Styles
+ *
+ * At one point, this function was used to disable MP6 styles
+ * on WP.com, but this is no longer applicable
+ * https://wordpress.org/plugins/mp6/
+ *
+ * @deprecated Not applicable on VIP Go
+ */
+function wpcom_vip_remove_mp6_styles() {
+	_deprecated_function( __FUNCTION__, '2.0.0' );
+}
