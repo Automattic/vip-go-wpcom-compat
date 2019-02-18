@@ -58,3 +58,10 @@ function vip_goog_stats( $deprecated = null ) {
 function wpcom_vip_remove_mp6_styles() {
 	_deprecated_function( __FUNCTION__, '2.0.0' );
 }
+
+/*
+ * @deprecated Not applicable on VIP Go
+ */
+function wpcom_vip_remove_bbpress2_staff_css() {
+	_deprecated_function( __FUNCTION__, '2.0.0' );
+}
