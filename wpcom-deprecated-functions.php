@@ -65,3 +65,10 @@ function wpcom_vip_remove_mp6_styles() {
 function wpcom_vip_remove_bbpress2_staff_css() {
 	_deprecated_function( __FUNCTION__, '2.0.0' );
 }
+
+/*
+ * @deprecated Not part of the VIP Go platform
+ */
+function wpcom_vip_enabled_cap_in_oembed( $location = false ) {
+	_deprecated_function( __FUNCTION__, '2.0.0' );
+}
