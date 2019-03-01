@@ -72,3 +72,12 @@ function wpcom_vip_remove_bbpress2_staff_css() {
 function wpcom_vip_enabled_cap_in_oembed( $location = false ) {
 	_deprecated_function( __FUNCTION__, '2.0.0' );
 }
+
+/*
+ * @deprecated Not part of the VIP Go platform
+ */
+function is_wpcom_vip() {
+	_deprecated_function( __FUNCTION__, '2.0.0' );
+
+	return WPCOM_IS_VIP_ENV;
+}
