@@ -352,10 +352,10 @@ function wpcom_print_news_sitemap($format) {
 	xmlns:image="http://www.google.com/schemas/sitemap-image/1.1"
 	>
 <?php
-	$posts = wp_cache_get('news_sitemap_posts', 'metro_sitemap');
+	$posts = wp_cache_get('news_sitemap_posts', 'wpcom_sitemap');
 	if( empty( $posts ) ) {
 		$posts = $wpdb->get_results( $query );
-		wp_cache_set('news_sitemap_posts', $posts, 'metro_sitemap', 60);
+		wp_cache_set('news_sitemap_posts', $posts, 'wpcom_sitemap', 60);
 	}
 	foreach ( $posts as $post ):
 
