@@ -79,5 +79,5 @@ function wpcom_vip_enabled_cap_in_oembed( $location = false ) {
 function is_wpcom_vip() {
 	_deprecated_function( __FUNCTION__, '2.0.0' );
 
-	return WPCOM_IS_VIP_ENV;
+	return defined( 'WPCOM_IS_VIP_ENV' ) && true === WPCOM_IS_VIP_ENV ;
 }
