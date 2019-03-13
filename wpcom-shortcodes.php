@@ -29,7 +29,7 @@ function wpcom_compat_protected_iframe_shortcode( $attrs ) {
 		global $wpdb;
 
 		$embed = $wpdb->get_row(
-			$wpdb->prepare( 'SELECT html FROM `%s` WHERE `embed_id` = %s', $embed_table, $id )
+			$wpdb->prepare( "SELECT html FROM `$embed_table` WHERE `embed_id` = %s", $id )
 		);
 
 		if ( ! $embed ) {
