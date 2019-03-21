@@ -9,6 +9,7 @@ The following functions are deprecated on VIP Go and are added as shims to keep 
 * `wpcom_vip_load_wp_rest_api()` - Loads the built-in WP REST API endpoints in WordPress.com VIP context.  This function is not needed on VIP Go, or core WordPress to load the REST API and can be safely removed.
 * `wpcom_vip_enable_https_canonical()` - By default HTTP is forced to be the canonical version of URLs on WordPress.com. This function is not needed on VIP Go.
 * `require_lib( $slug )` - This internal WordPress.com function adds shared WordPress.com libraries. These libraries will need to be copied directly into the VIP Go client repository.
+* `is_wpcom_vip()` - This checks if we are on a WordPress VIP platform vs local. Tihs function is not needed on VIP Go.
 
 ## Shortcodes
 
