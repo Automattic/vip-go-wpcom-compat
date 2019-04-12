@@ -15,7 +15,7 @@ function wpcom_compat_protected_iframe_shortcode( $attrs ) {
 		)
 	);
 
-	$embed_table     = apply_filters( 'wpcom_protected_embed_table', 'protected_embeds' );
+	$embed_table     = apply_filters( 'wpcom_protected_embed_table', 'wp_protected_embeds' );
 	$embed_not_found = apply_filters( 'wpcom_protected_embed_not_found', '<!-- Embed not found -->' );
 
 	if ( ! $attrs['id'] ) {
@@ -29,7 +29,7 @@ function wpcom_compat_protected_iframe_shortcode( $attrs ) {
 		global $wpdb;
 
 		$embed = $wpdb->get_row(
-			$wpdb->prepare( 'SELECT html FROM `%s` WHERE `embed_id` = %s', $embed_table, $id )
+			$wpdb->prepare( "SELECT html FROM `$embed_table` WHERE `embed_id` = %s", $id )
 		);
 
 		if ( ! $embed ) {
