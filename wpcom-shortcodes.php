@@ -8,6 +8,8 @@
  * `remove_shortcode( 'protected-iframe' )` before loading the other plugin.
  */
 function wpcom_compat_protected_iframe_shortcode( $attrs ) {
+	global $wpdb;
+	
 	$attrs = wp_parse_args(
 		$attrs,
 		array(
@@ -15,7 +17,7 @@ function wpcom_compat_protected_iframe_shortcode( $attrs ) {
 		)
 	);
 
-	$embed_table     = apply_filters( 'wpcom_protected_embed_table', 'wp_protected_embeds' );
+	$embed_table     = apply_filters( 'wpcom_protected_embed_table', $wpdb->prefix . 'protected_embeds' );
 	$embed_not_found = apply_filters( 'wpcom_protected_embed_not_found', '<!-- Embed not found -->' );
 
 	if ( ! $attrs['id'] ) {
@@ -26,8 +28,6 @@ function wpcom_compat_protected_iframe_shortcode( $attrs ) {
 	$embed = wp_cache_get( $id, 'simple-protected-embeds' );
 
 	if ( false === $embed ) {
-		global $wpdb;
-
 		$embed = $wpdb->get_row(
 			$wpdb->prepare( "SELECT html FROM `$embed_table` WHERE `embed_id` = %s", $id )
 		);
