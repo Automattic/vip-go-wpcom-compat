@@ -1,0 +1,4 @@
+[submodule "plugins/writing-helper"]
+	path = plugins/writing-helper
+	url = https://github.com/Automattic/writing-helper.git
+	branch = master
