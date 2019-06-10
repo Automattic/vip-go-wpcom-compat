@@ -81,3 +81,12 @@ function is_wpcom_vip() {
 
 	return defined( 'WPCOM_IS_VIP_ENV' ) && true === WPCOM_IS_VIP_ENV ;
 }
+
+/**
+ * @deprecated Not part of the VIP Go platform
+ */
+function wpcom_vip_protected_embed_to_original( $content ) {
+	_deprecated_function( __FUNCTION__, '2.0.0' );
+
+	return $content;
+}
