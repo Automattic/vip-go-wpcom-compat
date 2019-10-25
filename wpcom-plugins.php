@@ -1,25 +1,26 @@
 <?php
 
 /**
- * Filter the arguments that are passed into wpcom_vip_load_plugin().
- * Extends support for compability with WPcom's deprecated plugin versioning and deprecated folder locations.
- * 
- * @param $args [ 'plugin' => $plugin, 'folder' => $folder ]
- * @param $version Deprecated $load_release_candidate_not_used
- * @return $args [ 'plugin' => 'plugin-slug-1.2/plugin-slug.php', 'folder' => 'custom-folder' ]
+ * Loads a plugin on VIP Go, with compatability for the way things were done on WPcom.
+ * Compatability for both WPcom's deprecated plugin versioning and the deprecated folder locations (theme & plugin).
+ *
+ * @param string $plugin Optional. Folder name of the plugin, or the folder and plugin file name (such as wp-api/plugin.php), relative to WP_PLUGIN_DIR.
+ * @param string $folder Subdirectory of WP_PLUGIN_DIR to load plugin from.
+ * @param string $version Optional. Specify which version of the plugin to load. Version should be in the format 1.0.0.
+ *
+ * @return bool True if the include was successful.
  */
-function wpcom_compat_load_plugin_args( $args, $version ) {
-	if ( ! empty( $args['plugin'] ) && ! empty( $version ) && is_string( $args['plugin'] ) && is_string( $version ) ) {
-		$args['plugin'] = "{$args['plugin']}-{$version}/{$args['plugin']}.php";
+function wpcom_vip_legacy_load_plugin( $plugin = false, $folder = false, $version = false ) {
+	if ( is_string( $version ) && false !== $plugin ) {
+		$plugin = "$plugin-$version/$plugin.php";
 	}
 
-	if ( ! empty( $args['folder'] ) && in_array( $args['folder'], [ 'theme', 'plugins' ], true ) ) {
-		$args['folder'] = false;
+	if ( in_array( $folder, [ 'theme', 'plugins' ], true ) ) {
+		$folder = false;
 	}
 
-	return $args;
+	return wpcom_vip_load_plugin( $plugin, $folder );
 }
-add_filter( 'wpcom_vip_load_plugin_args','wpcom_compat_load_plugin_args', 10, 2 );
 
 // Enables the Writing Helper plugin that is a part of WordPress.com but not Jetpack.
 if ( true === apply_filters( 'wpcom_compat_enable_writing_helper', true ) && ! class_exists( 'Writing_Helper' ) ) {
