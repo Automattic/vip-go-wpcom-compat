@@ -26,3 +26,5 @@ function wpcom_vip_legacy_load_plugin( $plugin = false, $folder = false, $versio
 if ( true === apply_filters( 'wpcom_compat_enable_writing_helper', true ) && ! class_exists( 'Writing_Helper' ) ) {
 	require __DIR__ . '/plugins/writing-helper/writing-helper.php';
 }
+
+require_once __DIR__ . '/plugins/mrss.php';
