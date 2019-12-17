@@ -35,8 +35,12 @@ wpcom_vip_load_plugin( 'my-plugin' );
 // WP.com loads from `vip/plugins/my-plugin-2.0`
 wpcom_vip_load_plugin( 'my-plugin', 'plugins', '2.0' );
 
-// VIP Go loads from `plugins/`
-wpcom_vip_load_plugin( 'my-plugin' );
+
+// VIP Go loads from `plugins/my-plugin-2.0`
+// 1. With compat wrapper:
+wpcom_vip_legacy_load_plugin( 'my-plugin', 'plugins', '2.0' );
+// 2. With VIP Go wpcom_vip_load_plugin:
+wpcom_vip_load_plugin( 'my-plugin-2.0/my-plugin.php' );
 ```
 
 ## Deprecated Functions
