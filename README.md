@@ -66,7 +66,8 @@ The following custom WP-CLI commands exist in this plugin:
 
 ## Plugins
 
-* [Writing Helper](https://github.com/Automattic/writing-helper) - "Helps you write your posts." This plugin is a feature on WordPress.com that allows posts to be copied and for feedback to be requested.  This plugin can be disabled by calling `add_filter( 'wpcom_compat_enable_writing_helper', '__return_false' );` before loading the WordPress.com Compatibility mu-plugin.
+* [Writing Helper](https://github.com/Automattic/writing-helper) - "Helps you write your posts."  This plugin is a feature on WordPress.com that allows posts to be copied and for feedback to be requested.  This plugin can be disabled by calling `add_filter( 'wpcom_compat_enable_writing_helper', '__return_false' );` before loading the WordPress.com Compatibility mu-plugin.
+* MediaRSS - This plugin adds compatibility for MediaRSS for RSS feeds, it's going to be merged in Jetpack at some point [Jetpack issue #11062](https://github.com/Automattic/jetpack/issues/11062), but for now it's a part of this compat plugin.
 
 ## Filters
 
