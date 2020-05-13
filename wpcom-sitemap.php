@@ -494,7 +494,7 @@ if ( ! function_exists( 'is_publicly_available' ) || is_publicly_available() ) {
 	add_action( 'deleted_post', __NAMESPACE__ . '\\sitemap_handle_update', 12, 1 );
 
 	$protocol = is_ssl() ? 'https://' : 'http://';
-	$request_url = $protocol . $_SERVER['HTTP_HOST'] . $_SERVER['REQUEST_URI'];
+	$request_url = isset( $_SERVER['HTTP_HOST'] ) ? $protocol . $_SERVER['HTTP_HOST'] . $_SERVER['REQUEST_URI'] : '';
 	if ( $request_url == home_url( 'sitemap.xml' ) ) {
 		add_action( 'init', __NAMESPACE__ . '\\wpcom_print_sitemap', 999 ); // run later so things like custom post types have been registered
 	} elseif ( $request_url == home_url( 'news-sitemap.xml' ) ) {
