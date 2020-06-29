@@ -65,7 +65,7 @@ function wpcom_make_content_clickable( $content ) {
 
 	foreach ( $split as $chunk ) {
 		// if $chunk is white space or a tag (or a combined tag), add it and continue.
-		if ( preg_match( '/^\s+$/', $chunk ) || ( '<' === $chunk{0} && '>' === $chunk{ strlen( $chunk ) - 1 } ) ) {
+		if ( preg_match( '/^\s+$/', $chunk ) || ( strpos( $chunk, '<' ) === 0 && '>' === $chunk[strlen( $chunk ) - 1] ) ) {
 			$out .= $chunk;
 			continue;
 		}
