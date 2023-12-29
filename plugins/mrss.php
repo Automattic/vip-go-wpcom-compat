@@ -114,7 +114,7 @@ if ( ! function_exists( 'mrss_init' ) ) {
 			$media['content']['attr']['medium'] = 'image';
 		}
 
-		$thumbnail = & get_post( $thumb_id );
+		$thumbnail = get_post( $thumb_id );
 		$title     = trim( strip_tags( $thumbnail->post_title ) );
 
 		if ( empty( $title ) ) {
