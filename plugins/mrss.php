@@ -115,7 +115,7 @@ if ( ! function_exists( 'mrss_init' ) ) {
 		}
 
 		$thumbnail = get_post( $thumb_id );
-		$title     = trim( strip_tags( $thumbnail->post_title ) );
+		$title     = trim( strip_tags( $thumbnail->post_title ?? '' ) );
 
 		if ( empty( $title ) ) {
 			$title = trim( strip_tags( get_post_meta( $thumb_id, '_wp_attachment_image_alt', true ) ) );
