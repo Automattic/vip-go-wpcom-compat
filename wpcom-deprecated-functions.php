@@ -52,7 +52,7 @@ function require_lib( $slug ) {
  *
  * @param mixed $deprecated Unused.
  */
-function vip_goog_stats( $deprecated = null ) {
+function vip_goog_stats( $deprecated = null ) { // phpcs:ignore Generic.CodeAnalysis.UnusedFunctionParameter.Found -- Kept so existing calls still match the signature.
 	_deprecated_function( __FUNCTION__, '2.0.0' );
 }
 
@@ -85,7 +85,7 @@ function wpcom_vip_remove_bbpress2_staff_css() {
  *
  * @param mixed $location Unused.
  */
-function wpcom_vip_enabled_cap_in_oembed( $location = false ) {
+function wpcom_vip_enabled_cap_in_oembed( $location = false ) { // phpcs:ignore Generic.CodeAnalysis.UnusedFunctionParameter.Found -- Kept so existing calls still match the signature.
 	_deprecated_function( __FUNCTION__, '2.0.0' );
 }
 

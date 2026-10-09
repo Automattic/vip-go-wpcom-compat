@@ -36,8 +36,9 @@ function wpcom_compat_protected_iframe_shortcode( $attrs ) {
 	if ( false === $embed ) {
 		global $wpdb;
 
+		// phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery -- Custom table; the result is cached below.
 		$embed = $wpdb->get_row(
-			$wpdb->prepare( "SELECT html FROM `$embed_table` WHERE `embed_id` = %s", $id )
+			$wpdb->prepare( "SELECT html FROM `$embed_table` WHERE `embed_id` = %s", $id ) // phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared -- Table name from a filter, not user input.
 		);
 
 		if ( ! $embed ) {

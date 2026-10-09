@@ -44,7 +44,7 @@ function sitemap_cache_key() {
  */
 function get_approved_comments_max_datetime( $post_id ) {
 	global $wpdb;
-	return $wpdb->get_var( $wpdb->prepare( "SELECT MAX(comment_date_gmt) FROM $wpdb->comments WHERE comment_post_ID = %d AND comment_approved = '1' AND comment_type=''", $post_id ) );
+	return $wpdb->get_var( $wpdb->prepare( "SELECT MAX(comment_date_gmt) FROM $wpdb->comments WHERE comment_post_ID = %d AND comment_approved = '1' AND comment_type=''", $post_id ) ); // phpcs:ignore WordPress.DB.DirectDatabaseQuery -- The whole sitemap is cached.
 }
 
 /**
@@ -71,14 +71,14 @@ function wpcom_print_sitemap_item( $data ) {
  *
  * @param array $array Elements, keyed by name, with string or array values.
  */
-function wpcom_print_xml_tag( $array ) {
+function wpcom_print_xml_tag( $array ) { // phpcs:ignore Universal.NamingConventions.NoReservedKeywordParameterNames.arrayFound -- Renaming would break callers using named arguments.
 	foreach ( $array as $key => $value ) {
 		if ( is_array( $value ) ) {
-			echo "<$key>";
+			echo "<$key>"; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- Element names are set in code or by filters.
 			wpcom_print_xml_tag( $value );
-			echo "</$key>";
+			echo "</$key>"; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- Element names are set in code or by filters.
 		} else {
-			echo "<$key>" . esc_html( $value ) . "</$key>";
+			echo "<$key>" . esc_html( $value ) . "</$key>"; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- Element names are set in code or by filters; values are escaped.
 		}
 	}
 }
@@ -177,7 +177,7 @@ function wpcom_print_sitemap() {
 		$post_types_in = join( ',', $post_types_in );
 
 		// use direct query instead because get_posts was acting too heavy for our needs.
-		$posts = $wpdb->get_results( "SELECT ID, post_type, post_modified_gmt, comment_count FROM $wpdb->posts WHERE post_status='publish' AND post_type IN ({$post_types_in}) ORDER BY post_modified_gmt DESC LIMIT 1000" );
+		$posts = $wpdb->get_results( "SELECT ID, post_type, post_modified_gmt, comment_count FROM $wpdb->posts WHERE post_status='publish' AND post_type IN ({$post_types_in}) ORDER BY post_modified_gmt DESC LIMIT 1000" ); // phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.PreparedSQL.InterpolatedNotPrepared -- Post types are prepared above; the whole sitemap is cached.
 		if ( empty( $posts ) ) {
 			header( 'HTTP/1.0 404 Not Found', true, 404 );
 		}
@@ -199,7 +199,7 @@ function wpcom_print_sitemap() {
 			// Get the attachment IDs for all posts. We need to see how many
 			// attachments each post parent has and limit it to 5.
 			$query                = "SELECT ID, post_parent FROM {$wpdb->posts} WHERE post_parent IN ({$post_parents}) AND post_type='attachment' AND post_mime_type='image/jpeg' LIMIT 0,1000;";
-			$all_attachments      = $wpdb->get_results( $query );
+			$all_attachments      = $wpdb->get_results( $query ); // phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.PreparedSQL.NotPrepared -- Built from prepared or intval()'d values above.
 			$selected_attachments = array();
 			$attachment_count     = array();
 
@@ -225,7 +225,7 @@ function wpcom_print_sitemap() {
 			// Get more of the attachment object for the attachments we actually care about.
 			$attachment_ids   = implode( ',', array_map( 'intval', $selected_attachments ) );
 			$query            = "SELECT p.ID, p.post_parent, p.post_title, p.post_excerpt, p.guid FROM {$wpdb->posts} as p WHERE p.ID IN ({$attachment_ids}) AND p.post_type='attachment' AND p.post_mime_type='image/jpeg' LIMIT 500;";
-			$attachments      = $wpdb->get_results( $query );
+			$attachments      = $wpdb->get_results( $query ); // phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.PreparedSQL.NotPrepared -- Built from prepared or intval()'d values above.
 			$post_attachments = array_merge( $post_attachments, $attachments );
 		}
 
@@ -331,11 +331,11 @@ function wpcom_print_sitemap() {
 		unset( $tree );
 		if ( ! empty( $xml ) ) {
 			wp_cache_set( $key, $xml, 'sitemap', 24 * 60 * 60 );  // cache for 24 hours.
-			echo $xml;
+			echo $xml; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- XML built by SimpleXML from escaped values.
 		}
 	} else {
 		header( 'Content-Type: ' . sitemap_content_type(), true );
-		echo $xml;
+		echo $xml; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- Cached XML, built by SimpleXML from escaped values.
 	}
 	die();
 }
@@ -345,7 +345,7 @@ function wpcom_print_sitemap() {
  *
  * @param mixed $format Unused.
  */
-function wpcom_print_news_sitemap( $format ) {
+function wpcom_print_news_sitemap( $format ) { // phpcs:ignore Generic.CodeAnalysis.UnusedFunctionParameter.Found -- Kept so existing calls still match the signature.
 	if ( defined( 'WPCOM_SKIP_DEFAULT_NEWS_SITEMAP' ) && WPCOM_SKIP_DEFAULT_NEWS_SITEMAP ) {
 		return;
 	}
@@ -365,6 +365,7 @@ function wpcom_print_news_sitemap( $format ) {
 	$limit        = apply_filters( 'wpcom_sitemap_news_sitemap_count', 1000 );
 	$cur_datetime = current_time( 'mysql', true );
 
+	// phpcs:disable WordPress.DB.PreparedSQL.InterpolatedNotPrepared -- Post types are prepared above.
 	$query = $wpdb->prepare(
 		"
 		SELECT p.ID, p.post_title, p.post_type, p.post_date, p.post_name, p.post_date_gmt, GROUP_CONCAT(t.name SEPARATOR ', ') AS keywords
@@ -379,6 +380,7 @@ function wpcom_print_news_sitemap( $format ) {
 		$cur_datetime,
 		$limit 
 	);
+	// phpcs:enable
 
 
 	header( 'Content-Type: application/xml' );
@@ -391,10 +393,10 @@ function wpcom_print_news_sitemap( $format ) {
 	xmlns:news="http://www.google.com/schemas/sitemap-news/0.9"
 	xmlns:image="http://www.google.com/schemas/sitemap-image/1.1"
 	>
-<?php
+<?php // phpcs:ignore Generic.WhiteSpace.ScopeIndent.Incorrect -- Indenting would add a tab to the XML.
 	$posts = wp_cache_get( 'news_sitemap_posts', 'wpcom_sitemap' );
 	if ( empty( $posts ) ) {
-		$posts = $wpdb->get_results( $query );
+		$posts = $wpdb->get_results( $query ); // phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.PreparedSQL.NotPrepared -- Prepared above, and cached.
 		wp_cache_set( 'news_sitemap_posts', $posts, 'wpcom_sitemap', 60 );
 	}
 	foreach ( $posts as $post ) :
@@ -404,7 +406,7 @@ function wpcom_print_news_sitemap( $format ) {
 			continue;
 		}
 
-		$GLOBALS['post']                       = $post;
+		$GLOBALS['post']                       = $post; // phpcs:ignore WordPress.WP.GlobalVariablesOverride.Prohibited -- get_the_title_rss() reads the global post.
 		$url                                   = array();
 		$url['loc']                            = get_permalink( $post->ID );
 		$news                                  = array();
@@ -438,7 +440,7 @@ function wpcom_print_news_sitemap( $format ) {
 	endforeach;
 	?>
 </urlset>
-<?php
+<?php // phpcs:ignore Generic.WhiteSpace.ScopeIndent.Incorrect -- Indenting would add a tab to the XML.
 	die();
 }
 
@@ -545,14 +547,14 @@ function sitemap_handle_update( $post_id ) {
 	$data                    = new stdClass();
 	$data->sitemap_uri       = sitemap_uri();
 	$data->sitemap_endpoints = sitemap_endpoints();
-	$data->origin_ip         = $_SERVER['REMOTE_ADDR'];
+	$data->origin_ip         = $_SERVER['REMOTE_ADDR']; // phpcs:ignore WordPress.Security.ValidatedSanitizedInput, WordPressVIPMinimum.Variables.ServerVariables.UserControlledHeaders, WordPressVIPMinimum.Variables.RestrictedVariables.cache_constraints___SERVER__REMOTE_ADDR__ -- Only runs on WordPress.com, where queue_pings_job() exists.
 	$data->blog_id           = $current_blog->blog_id;
 	$data->post_id           = $post_id;
 	queue_pings_job( $data, 'sitemap', (int) wpcom_is_vip(), 2 );
 }
 
 if ( ! function_exists( 'is_publicly_available' ) || is_publicly_available() ) {
-	add_action( 'do_robotstxt', __NAMESPACE__ . '\\sitemap_discovery', 5, 0 );
+	add_action( 'do_robotstxt', __NAMESPACE__ . '\\sitemap_discovery', 5, 0 ); // phpcs:ignore WordPressVIPMinimum.Hooks.RestrictedHooks.do_robotstxt -- Lists the sitemaps in robots.txt.
 
 	add_action( 'publish_post', __NAMESPACE__ . '\\sitemap_handle_update', 12, 1 );
 	add_action( 'publish_page', __NAMESPACE__ . '\\sitemap_handle_update', 12, 1 );
@@ -560,7 +562,7 @@ if ( ! function_exists( 'is_publicly_available' ) || is_publicly_available() ) {
 	add_action( 'deleted_post', __NAMESPACE__ . '\\sitemap_handle_update', 12, 1 );
 
 	$protocol    = is_ssl() ? 'https://' : 'http://';
-	$request_url = isset( $_SERVER['HTTP_HOST'] ) ? $protocol . $_SERVER['HTTP_HOST'] . $_SERVER['REQUEST_URI'] : '';
+	$request_url = isset( $_SERVER['HTTP_HOST'] ) ? $protocol . $_SERVER['HTTP_HOST'] . $_SERVER['REQUEST_URI'] : ''; // phpcs:ignore WordPress.Security.ValidatedSanitizedInput -- Only compared with the sitemap URLs.
 	if ( home_url( 'sitemap.xml' ) == $request_url ) {
 		add_action( 'init', __NAMESPACE__ . '\\wpcom_print_sitemap', 999 ); // run later so things like custom post types have been registered.
 	} elseif ( home_url( 'news-sitemap.xml' ) == $request_url ) {
