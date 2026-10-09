@@ -12,7 +12,7 @@ jQuery(document).ready(function($) {
 			});
 			return;
 		} else {
-			error_container = '<div id="draft-error" class="error"><p>' + notice + '</p></div>';
+			error_container = $( '<div id="draft-error" class="error"><p></p></div>' ).find( 'p' ).text( notice ).end();
 		}
 
 		$(id).after(error_container);

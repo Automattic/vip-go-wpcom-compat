@@ -63,7 +63,7 @@
 						<?php if ( 'anonymous' != $avatar_class ): ?>
 							<?php echo get_avatar( $email, 24 ); ?>
 						<?php endif; ?>
-						<span class="name"><?php echo $display_name ?></span>
+						<span class="name"><?php echo esc_html( $display_name ); ?></span>
 						<span class="added">
 							<?php printf(
 								 _x(

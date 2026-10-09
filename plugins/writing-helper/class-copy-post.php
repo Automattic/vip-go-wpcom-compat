@@ -60,10 +60,41 @@ class Writer_Helper_Copy_Post {
 		$post_type = ! empty( $_REQUEST['post_type'] ) ?
 			sanitize_key( $_REQUEST['post_type'] ) : 'post';
 
-		Writing_Helper::json_return( self::get_candidate_posts( $post_type, $search_terms ) );
+		Writing_Helper::json_return( array_map( array( __CLASS__, 'prepare_for_output' ), self::get_candidate_posts( $post_type, $search_terms ) ) );
+	}
+
+	/**
+	 * Whether the current user may copy a post.
+	 *
+	 * They must be able to read it, which for drafts means being able to edit it, and
+	 * password-protected posts are only offered to users who can edit them.
+	 *
+	 * @param WP_Post|null $post Post.
+	 * @return bool
+	 */
+	public static function can_copy( $post ) {
+		return $post instanceof WP_Post
+			&& post_type_supports( $post->post_type, 'writing-helper' )
+			&& current_user_can( 'read_post', $post->ID )
+			&& ( '' === $post->post_password || current_user_can( 'edit_post', $post->ID ) );
+	}
+
+	/**
+	 * Remove the post password before a post is sent to the browser. Copying doesn't need it.
+	 *
+	 * @param WP_Post $post Post.
+	 * @return WP_Post
+	 */
+	public static function prepare_for_output( $post ) {
+		$post->post_password = '';
+		return $post;
 	}
 
 	public static function get_candidate_posts( $post_type = 'post', $search_terms = '', $sticky = false ) {
+		if ( ! post_type_supports( $post_type, 'writing-helper' ) ) {
+			return array();
+		}
+
 		$sticky_posts = get_option( 'copy_a_post_sticky_posts' );
 		$post_parameters = array(
 			'post_type' => $post_type,
@@ -90,7 +121,7 @@ class Writer_Helper_Copy_Post {
 			do_action( 'wh_copypost_searched_posts' );
 		}
 
-		return get_posts( $post_parameters );
+		return array_values( array_filter( get_posts( $post_parameters ), array( __CLASS__, 'can_copy' ) ) );
 	}
 
 	function add_ajax_get_post_endpoint() {
@@ -101,14 +132,14 @@ class Writer_Helper_Copy_Post {
 		$_REQUEST = stripslashes_deep( $_REQUEST );
 		$post_id = (int) $_REQUEST['post_id'];
 
-		if ( ! current_user_can( 'read_post', $post_id ) ) {
-			exit;
-		}
-
 		if ( empty( $post_id ) )
 			die( '-1' );
 
 		$post = get_post( $post_id );
+
+		if ( ! self::can_copy( $post ) ) {
+			exit;
+		}
 
 		if ( 'post' == $post->post_type ) {
 			$post->post_tags = implode( ', ', (array) $wpdb->get_col( $wpdb->prepare( "SELECT slug FROM {$wpdb->terms} AS t INNER JOIN {$wpdb->term_taxonomy} AS tt ON tt.term_id = t.term_id INNER JOIN {$wpdb->term_relationships} AS tr ON tr.term_taxonomy_id = tt.term_taxonomy_id WHERE tt.taxonomy IN ( 'post_tag' ) AND tr.object_id = %d", $post_id ) ) );
@@ -117,7 +148,7 @@ class Writer_Helper_Copy_Post {
 
 		do_action( 'wh_copypost_copied_post', $post );
 
-		Writing_Helper::json_return( $post );
+		Writing_Helper::json_return( self::prepare_for_output( $post ) );
 	}
 
 	function add_ajax_stick_post_endpoint() {
@@ -130,7 +161,7 @@ class Writer_Helper_Copy_Post {
 		$_REQUEST = stripslashes_deep( $_REQUEST );
 		$post_id = (int) $_REQUEST['post_id'];
 
-		if ( empty( $post_id ) )
+		if ( empty( $post_id ) || ! current_user_can( 'edit_posts' ) || ! self::can_copy( get_post( $post_id ) ) )
 			die( '-1' );
 
 		// Get sticky posts for the blog.
@@ -150,6 +181,12 @@ class Writer_Helper_Copy_Post {
     }
 
 	function add_ajax_record_stat_endpoint() {
+		check_ajax_referer( 'writing_helper_nonce_' . get_current_blog_id(), 'nonce' );
+
+		if ( ! current_user_can( 'edit_posts' ) ) {
+			die( '-1' );
+		}
+
 		$_REQUEST = stripslashes_deep( $_REQUEST );
 		$stat = $_REQUEST['stat'];
 

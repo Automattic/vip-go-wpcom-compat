@@ -222,7 +222,7 @@ class Writing_Helper {
 		// strict mime-type policies
 		header(
 			'Content-Type: application/'
-			. $is_jsonp ? 'javascript' : 'json'
+			. ( $is_jsonp ? 'javascript' : 'json' )
 			. '; charset=' . $charset,
 			true
 		);
