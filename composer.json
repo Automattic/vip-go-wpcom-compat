@@ -1,0 +1,58 @@
+{
+	"name": "automattic/vip-go-wpcom-compat",
+	"description": "Compatibility shims for sites that moved from WordPress.com VIP to the WordPress VIP Platform.",
+	"license": "GPL-2.0-or-later",
+	"type": "wordpress-plugin",
+	"authors": [
+		{
+			"name": "Automattic",
+			"homepage": "https://automattic.com/"
+		}
+	],
+	"homepage": "https://github.com/Automattic/vip-go-wpcom-compat",
+	"support": {
+		"issues": "https://github.com/Automattic/vip-go-wpcom-compat/issues",
+		"source": "https://github.com/Automattic/vip-go-wpcom-compat"
+	},
+	"require": {
+		"php": ">=7.4",
+		"composer/installers": "^1.0 || ^2.0"
+	},
+	"require-dev": {
+		"automattic/vipwpcs": "^3",
+		"php-parallel-lint/php-parallel-lint": "^1.3",
+		"phpcompatibility/phpcompatibility-wp": "^2.1",
+		"phpunit/phpunit": "^9.6",
+		"yoast/wp-test-utils": "^1.2"
+	},
+	"autoload-dev": {
+		"psr-4": {
+			"Automattic\\VIPGoWPCOMCompat\\Tests\\": "tests/"
+		}
+	},
+	"config": {
+		"allow-plugins": {
+			"composer/installers": true,
+			"dealerdirect/phpcodesniffer-composer-installer": true
+		},
+		"sort-packages": true
+	},
+	"scripts": {
+		"coverage": "@php ./vendor/bin/phpunit --coverage-html ./.phpunit.cache/coverage-html",
+		"cs": "@php ./vendor/bin/phpcs -q",
+		"cs-fix": "@php ./vendor/bin/phpcbf -q",
+		"lint": "@php ./vendor/php-parallel-lint/php-parallel-lint/parallel-lint . -e php --exclude vendor --exclude .git",
+		"lint-ci": "@php ./vendor/php-parallel-lint/php-parallel-lint/parallel-lint . -e php --exclude vendor --exclude .git --checkstyle",
+		"test:integration": "npx wp-env run cli --env-cwd=wp-content/plugins/$(basename \"$PWD\") ./vendor/bin/phpunit --testsuite integration",
+		"test:integration-ms": "npx wp-env run cli --env-cwd=wp-content/plugins/$(basename \"$PWD\") /bin/bash -c 'WP_MULTISITE=1 ./vendor/bin/phpunit --testsuite integration'"
+	},
+	"scripts-descriptions": {
+		"coverage": "Run tests with code coverage reporting",
+		"cs": "Run PHP Code Sniffer",
+		"cs-fix": "Run PHP Code Sniffer and fix violations",
+		"lint": "Run PHP linting",
+		"lint-ci": "Run PHP linting and send results to stdout",
+		"test:integration": "Run integration tests via wp-env",
+		"test:integration-ms": "Run integration tests in multisite mode via wp-env"
+	}
+}
