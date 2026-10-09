@@ -11,6 +11,7 @@
 /.distignore
 /.editorconfig
 /.gitattributes
+/.git-blame-ignore-revs
 /.gitignore
 /.phpcs.xml
 /.phpcs.xml.dist

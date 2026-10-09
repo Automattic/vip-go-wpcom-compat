@@ -46,7 +46,7 @@ class WPCOM_Compat_Command extends WPCOM_VIP_CLI_Command {
 			'UNIQUE KEY `embed_id` (`embed_id`) ' .
 			') ENGINE=InnoDB AUTO_INCREMENT=0';
 
-		require_once( ABSPATH . 'wp-admin/includes/upgrade.php' );
+		require_once ABSPATH . 'wp-admin/includes/upgrade.php';
 		$q = dbDelta( $sql );
 		WP_CLI::line( $q['protected_embeds'] );
 
@@ -63,9 +63,9 @@ class WPCOM_Compat_Command extends WPCOM_VIP_CLI_Command {
 			if ( ! $insert ) {
 				WP_CLI::warning( "Could not insert embed: `{$data['id']}`" );
 				WP_CLI::warning( $wpdb->last_error );
-				$errors++;
+				++$errors;
 			} else {
-				$success++;
+				++$success;
 			}
 		}
 
@@ -78,4 +78,4 @@ class WPCOM_Compat_Command extends WPCOM_VIP_CLI_Command {
 	}
 }
 
-WP_CLI::add_command( 'wpcom-compat', new WPCOM_Compat_Command );
+WP_CLI::add_command( 'wpcom-compat', new WPCOM_Compat_Command() );

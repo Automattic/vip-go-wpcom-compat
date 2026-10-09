@@ -35,7 +35,7 @@ function require_lib( $slug ) {
 	// If the lib happens to exist in client-mu-plugins/lib, load it.
 	$lib = WPCOM_VIP_CLIENT_MU_PLUGIN_DIR . '/lib/' . $slug . '/' . $slug . '.php';
 	if ( file_exists( $lib ) ) {
-		require_once( $lib );
+		require_once $lib;
 	}
 }
 
@@ -79,7 +79,7 @@ function wpcom_vip_enabled_cap_in_oembed( $location = false ) {
 function is_wpcom_vip() {
 	_deprecated_function( __FUNCTION__, '2.0.0' );
 
-	return defined( 'WPCOM_IS_VIP_ENV' ) && true === WPCOM_IS_VIP_ENV ;
+	return defined( 'WPCOM_IS_VIP_ENV' ) && true === WPCOM_IS_VIP_ENV;
 }
 
 /**

@@ -15,7 +15,7 @@ function wpcom_vip_legacy_load_plugin( $plugin = false, $folder = false, $versio
 		$plugin = "$plugin-$version/$plugin.php";
 	}
 
-	if ( in_array( $folder, [ 'theme', 'plugins' ], true ) ) {
+	if ( in_array( $folder, array( 'theme', 'plugins' ), true ) ) {
 		$folder = false;
 	}
 
