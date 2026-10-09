@@ -14,7 +14,7 @@ composer test:integration-ms # Multisite integration tests (needs wp-env)
 
 ## Conventions
 
-Follow `~/code/plugin-standards/`. Use the `/commit` and `/pr` skills. Branch from `develop`; `master` is the release branch.
+See `CONTRIBUTING.md` for the workflow and standards. In short: branch from `develop` and open pull requests against it; `master` is the release branch. Commits must be signed. Commit messages and pull request descriptions should explain why a change was made, not just what changed.
 
 ## Pitfalls
 
