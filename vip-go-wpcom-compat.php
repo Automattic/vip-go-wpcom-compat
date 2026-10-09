@@ -10,6 +10,7 @@
  * Plugin Name:       WordPress.com Compatibility
  * Plugin URI:        https://github.com/Automattic/vip-go-wpcom-compat
  * Description:       Compatibility shims for sites that moved from WordPress.com VIP to the WordPress VIP Platform.
+ * Version:           1.0.0
  * Requires at least: 6.4
  * Requires PHP:      7.4
  * Author:            Automattic, WordPress VIP
