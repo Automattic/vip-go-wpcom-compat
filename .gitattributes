@@ -1,0 +1,34 @@
+# Exclude these files from release archives.
+# This will also make them unavailable when using Composer with `--prefer-dist`.
+# If you develop for this plugin using Composer, use `--prefer-source`.
+# https://blog.madewithlove.be/post/gitattributes/
+
+# Directories
+/.claude/                        export-ignore
+/.github/                        export-ignore
+/tests/                          export-ignore
+
+# Files
+/.distignore                     export-ignore
+/.editorconfig                   export-ignore
+/.gitattributes                  export-ignore
+/.git-blame-ignore-revs           export-ignore
+/.gitignore                      export-ignore
+/.phpcs.xml.dist                 export-ignore
+/.wp-env.json                    export-ignore
+/AGENTS.md                       export-ignore
+/CHANGELOG.md                    export-ignore
+/CONTRIBUTING.md                 export-ignore
+/composer.json                   export-ignore
+/phpunit.xml.dist                export-ignore
+
+# Auto detect text files and perform LF normalization
+# https://pablorsk.medium.com/be-a-git-ninja-the-gitattributes-file-e58c07c9e915
+
+* text=auto
+
+# The above will handle all files NOT found below
+
+*.md text
+*.php text
+*.inc text

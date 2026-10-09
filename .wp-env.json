@@ -1,0 +1,14 @@
+{
+  "plugins": [ "." ],
+  "core": "WordPress/WordPress#master",
+  "phpVersion": "8.4",
+  "testsEnvironment": false,
+  "mappings": {
+    "wp-content/mu-plugins/vip-platform-stubs.php": "./tests/platform-stubs.php"
+  },
+  "config": {
+    "WP_DEBUG": true,
+    "WP_DEBUG_LOG": true,
+    "SCRIPT_DEBUG": true
+  }
+}

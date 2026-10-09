@@ -1,0 +1,121 @@
+name: Create GitHub Release
+
+# Runs on any pushed tag. A tag containing a hyphen (1.2.3-rc.1) is published
+# as a GitHub pre-release.
+on:
+  push:
+    tags:
+      - '*'
+
+# Disable all permissions by default; grant minimal permissions per job
+permissions: {}
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: false
+
+jobs:
+  release:
+    name: Build ZIP and publish release
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+
+      - name: Check the tag matches the plugin version
+        env:
+          TAG: ${{ github.ref_name }}
+        run: |
+          set -eu
+
+          VERSION="${TAG#v}"
+          HEADER="$(sed -n 's/^[[:space:]]*\*[[:space:]]*Version:[[:space:]]*//p' vip-go-wpcom-compat.php | head -n1 | tr -d '[:space:]')"
+
+          if [ "$HEADER" != "$VERSION" ]; then
+            echo "::error::The plugin header version is '${HEADER}' but the tag is '${VERSION}'"
+            exit 1
+          fi
+
+      - name: Build the distributable ZIP
+        env:
+          TAG: ${{ github.ref_name }}
+        run: |
+          set -eu
+
+          SLUG="${GITHUB_REPOSITORY#*/}"
+
+          # Staged outside the checkout, so rsync doesn't copy the staging
+          # directory into itself. The ZIP needs a single top-level directory
+          # named after the plugin folder.
+          mkdir -p "$RUNNER_TEMP/dist/$SLUG"
+          rsync -a --exclude-from=.distignore ./ "$RUNNER_TEMP/dist/$SLUG/"
+
+          ZIP_PATH="$RUNNER_TEMP/${SLUG}-${TAG#v}.zip"
+          ( cd "$RUNNER_TEMP/dist" && zip -rq "$ZIP_PATH" "$SLUG" )
+          unzip -Z1 "$ZIP_PATH"
+
+          echo "ZIP_PATH=${ZIP_PATH}" >> "$GITHUB_ENV"
+
+      - name: Prepare release title and notes
+        id: prep
+        env:
+          TAG: ${{ github.ref_name }}
+        run: |
+          set -eu
+
+          VERSION="${TAG#v}"
+
+          # Title carries the plugin name so the release reads with context
+          # wherever it surfaces (Slack, email) rather than as a bare version.
+          PLUGIN_NAME="$(sed -n 's/^[[:space:]]*\*[[:space:]]*Plugin Name:[[:space:]]*//p' vip-go-wpcom-compat.php | head -n1 | sed 's/[[:space:]]*$//')"
+          echo "title=${PLUGIN_NAME} ${VERSION}" >> "$GITHUB_OUTPUT"
+
+          # Notes come from the CHANGELOG entry for this version, with the
+          # "## [x.y.z] - date" heading dropped and "###" subsections promoted.
+          touch CHANGELOG.md
+          awk -v ver="$VERSION" '
+            BEGIN { gsub(/\./, "\\.", ver) }
+            $0 ~ ("^## \\[?" ver "(\\]|[[:space:]]|$)") { found = 1; next }
+            found && /^## / { exit }
+            found && /^\[[^]]+\]:[[:space:]]/ { exit }
+            found { print }
+          ' CHANGELOG.md | sed -E 's/^### /## /' > "$RUNNER_TEMP/notes.raw"
+
+          # Trim leading and trailing blank lines.
+          awk 'NF { seen = 1 } seen' "$RUNNER_TEMP/notes.raw" \
+            | tac | awk 'NF { seen = 1 } seen' | tac > "$RUNNER_TEMP/notes.md"
+
+          if [ -s "$RUNNER_TEMP/notes.md" ]; then
+            echo "have_notes=true" >> "$GITHUB_OUTPUT"
+          else
+            echo "have_notes=false" >> "$GITHUB_OUTPUT"
+            echo "::warning::No CHANGELOG entry found for ${VERSION}; falling back to auto-generated notes."
+          fi
+
+      - name: Publish the release
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          TAG: ${{ github.ref_name }}
+          TITLE: ${{ steps.prep.outputs.title }}
+          HAVE_NOTES: ${{ steps.prep.outputs.have_notes }}
+        run: |
+          set -eu
+
+          args=( --title "$TITLE" )
+
+          if [ "$HAVE_NOTES" = 'true' ]; then
+            args+=( --notes-file "$RUNNER_TEMP/notes.md" )
+          else
+            args+=( --generate-notes )
+          fi
+
+          case "$TAG" in
+            *-*) args+=( --prerelease ) ;;
+          esac
+
+          gh release create "$TAG" "$ZIP_PATH" "${args[@]}"

@@ -1,4 +1,9 @@
 <?php
+/**
+ * Shortcodes from WordPress.com.
+ *
+ * @package VIP_Go_WPCOM_Compat
+ */
 
 /**
  * Provides simple backwards compatability with WordPress.com Protected Embeds.
@@ -6,6 +11,9 @@
  *
  * If a site wants to use a different protected embeds plugin, they can by calling
  * `remove_shortcode( 'protected-iframe' )` before loading the other plugin.
+ *
+ * @param array|string $attrs Shortcode attributes.
+ * @return string The embed's HTML, or a comment if it isn't found.
  */
 function wpcom_compat_protected_iframe_shortcode( $attrs ) {
 	$attrs = wp_parse_args(
@@ -28,8 +36,9 @@ function wpcom_compat_protected_iframe_shortcode( $attrs ) {
 	if ( false === $embed ) {
 		global $wpdb;
 
+		// phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery -- Custom table; the result is cached below.
 		$embed = $wpdb->get_row(
-			$wpdb->prepare( "SELECT html FROM `$embed_table` WHERE `embed_id` = %s", $id )
+			$wpdb->prepare( "SELECT html FROM `$embed_table` WHERE `embed_id` = %s", $id ) // phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared -- Table name from a filter, not user input.
 		);
 
 		if ( ! $embed ) {

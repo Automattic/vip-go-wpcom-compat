@@ -1,4 +1,9 @@
 <?php
+/**
+ * Hooks that reproduce WordPress.com behaviour.
+ *
+ * @package VIP_Go_WPCOM_Compat
+ */
 
 /**
  * WP.com make clickable
@@ -65,14 +70,14 @@ function wpcom_make_content_clickable( $content ) {
 
 	foreach ( $split as $chunk ) {
 		// if $chunk is white space or a tag (or a combined tag), add it and continue.
-		if ( preg_match( '/^\s+$/', $chunk ) || ( strpos( $chunk, '<' ) === 0 && '>' === $chunk[strlen( $chunk ) - 1] ) ) {
+		if ( preg_match( '/^\s+$/', $chunk ) || ( strpos( $chunk, '<' ) === 0 && '>' === $chunk[ strlen( $chunk ) - 1 ] ) ) {
 			$out .= $chunk;
 			continue;
 		}
 
 		// three strpos() are faster than one preg_match() here. If we need to check for more protocols, preg_match() would probably be better.
 		if ( strpos( $chunk, 'http://' ) !== false || strpos( $chunk, 'https://' ) !== false || strpos( $chunk, 'www.' ) !== false ) {
-			// looks like there is a plain-text url
+			// looks like there is a plain-text url.
 			$out .= make_clickable( $chunk );
 		} else {
 			$out .= $chunk;

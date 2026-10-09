@@ -1,16 +1,24 @@
 <?php
 /**
+ * MediaRSS for RSS feeds, ported from WordPress.com.
+ *
  * This is not a verbatim copy of WP.com's version.
+ *
+ * @package VIP_Go_WPCOM_Compat
  */
+
 if ( ! function_exists( 'mrss_init' ) ) {
 	add_action( 'template_redirect', 'mrss_init' );
 
+	/**
+	 * Add MediaRSS to RSS2 feeds, unless the request turns it off with ?mrss=off.
+	 */
 	function mrss_init() {
 		if ( ! is_feed() ) {
 			return;
 		}
 
-		if ( isset( $_GET['mrss'] ) && $_GET['mrss'] == 'off' ) {
+		if ( isset( $_GET['mrss'] ) && 'off' == $_GET['mrss'] ) { // phpcs:ignore WordPress.Security.NonceVerification.Recommended -- Read-only switch for the feed's output.
 			return;
 		}
 
@@ -18,18 +26,26 @@ if ( ! function_exists( 'mrss_init' ) ) {
 		add_action( 'rss2_item', 'mrss_item', 10, 0 );
 	}
 
+	/**
+	 * Print the MediaRSS namespace on the feed's root element.
+	 */
 	function mrss_ns() {
 		?>xmlns:media="http://search.yahoo.com/mrss/"
 		<?php
 	}
 
+	/**
+	 * Print MediaRSS elements for the images and audio in a feed item.
+	 *
+	 * @param string|null $content Item content. Defaults to the current post's content.
+	 */
 	function mrss_item( $content = null ) {
 
 		global $shortcode_tags;
 
 		$meds            = array();
 		$_shortcode_tags = $shortcode_tags;
-		$shortcode_tags  = array( 'gallery' => 'gallery_shortcode' );
+		$shortcode_tags  = array( 'gallery' => 'gallery_shortcode' ); // phpcs:ignore WordPress.WP.GlobalVariablesOverride.Prohibited -- Only run [gallery]; restored below.
 
 		if ( ! isset( $content ) ) {
 			$content = get_the_content();
@@ -37,12 +53,13 @@ if ( ! function_exists( 'mrss_init' ) ) {
 
 		$content        = apply_filters( 'the_content_rss', $content );
 		$content        = do_shortcode( $content );
-		$shortcode_tags = $_shortcode_tags;
+		$shortcode_tags = $_shortcode_tags; // phpcs:ignore WordPress.WP.GlobalVariablesOverride.Prohibited -- Restores the original shortcodes.
 
-		// img tags
+		// img tags.
 		if ( preg_match_all( '/<img (.+?)>/', $content, $matches ) ) {
 			foreach ( $matches[1] as $attrs ) {
-				$media = $img = array();
+				$media = array();
+				$img   = array();
 				foreach ( wp_kses_hair( $attrs, array( 'http', 'https' ) ) as $attr ) {
 					$img[ $attr['name'] ] = $attr['value'];
 				}
@@ -62,17 +79,17 @@ if ( ! function_exists( 'mrss_init' ) ) {
 			}
 		}
 
-		// audio players
+		// audio players.
 		if ( preg_match_all( '!\[audio (.+)\]!i', $content, $matches ) ) {
 			foreach ( $matches[1] as $url ) {
 				$media = array();
 
 				// New-style media player puts the audio in a src or mp3 attribute.
-				// If we see an attribute starting with a https? url use that instead of the compat stuff below
+				// If we see an attribute starting with a https? url use that instead of the compat stuff below.
 				if ( preg_match( '!\w+="(https?://[^"]+)"!', $url, $attribute_match ) ) {
 					$url = $attribute_match[1];
 				} else {
-					// Remove the audio player config args that start with the pipe symbol (&#124;)
+					// Remove the audio player config args that start with the pipe symbol (&#124;).
 					$url = preg_replace( '/\&#124;.+/', '', $url );
 					$url = html_entity_decode( $url );
 					$url = preg_replace( '/[<>"\']/', '', $url );
@@ -95,7 +112,12 @@ if ( ! function_exists( 'mrss_init' ) ) {
 
 	add_filter( 'mrss_media', 'mrss_featured_image' );
 
-	/* Add featured image, as first item */
+	/**
+	 * Add featured image, as first item.
+	 *
+	 * @param array $meds MediaRSS elements for the item.
+	 * @return array MediaRSS elements, starting with the featured image.
+	 */
 	function mrss_featured_image( $meds ) {
 
 		if ( ! ( function_exists( 'has_post_thumbnail' ) && has_post_thumbnail() ) ) {
@@ -115,10 +137,10 @@ if ( ! function_exists( 'mrss_init' ) ) {
 		}
 
 		$thumbnail = get_post( $thumb_id );
-		$title     = trim( strip_tags( $thumbnail->post_title ?? '' ) );
+		$title     = trim( strip_tags( $thumbnail->post_title ?? '' ) ); // phpcs:ignore WordPressVIPMinimum.Functions.StripTags.StripTagsOneParameter -- wp_strip_all_tags() would change the feed's output.
 
 		if ( empty( $title ) ) {
-			$title = trim( strip_tags( get_post_meta( $thumb_id, '_wp_attachment_image_alt', true ) ) );
+			$title = trim( strip_tags( get_post_meta( $thumb_id, '_wp_attachment_image_alt', true ) ) ); // phpcs:ignore WordPressVIPMinimum.Functions.StripTags.StripTagsOneParameter -- wp_strip_all_tags() would change the feed's output.
 		}
 
 		if ( ! empty( $title ) ) {
@@ -133,12 +155,15 @@ if ( ! function_exists( 'mrss_init' ) ) {
 			}
 		}
 
-		// Add as first item
+		// Add as first item.
 		array_unshift( $meds, $media );
 
 		return $meds;
 	}
 
+	/**
+	 * Print MediaRSS elements for a post on another blog, referenced in this post's custom fields.
+	 */
 	function mrss_news_item() {
 		foreach ( get_post_custom() as $k => $v ) {
 			if ( $k == $v[0] && strpos( $k, ':' ) ) {
@@ -151,16 +176,22 @@ if ( ! function_exists( 'mrss_init' ) ) {
 		mrss_item( $post->post_content );
 	}
 
+	/**
+	 * Print MediaRSS elements.
+	 *
+	 * @param array $element Elements, keyed by name, each with optional attr and children arrays.
+	 * @param int   $indent  Number of tabs to indent by.
+	 */
 	function mrss_print( $element, $indent = 2 ) {
 
 		echo "\n";
 
 		foreach ( (array) $element as $name => $data ) {
 
-			echo str_repeat( "\t", $indent ) . "<media:$name";
+			echo str_repeat( "\t", $indent ) . "<media:$name"; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- Names are set in code or by the mrss_media filter; values are escaped.
 			if ( ! empty( $data['attr'] ) ) {
 				foreach ( $data['attr'] as $attr => $value ) {
-					echo " $attr=\"" . ent2ncr( esc_attr( $value ) ) . '"';
+					echo " $attr=\"" . ent2ncr( esc_attr( $value ) ) . '"'; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- Names are set in code or by the mrss_media filter; values are escaped.
 				}
 			}
 			if ( ! empty( $data['children'] ) ) {
@@ -173,7 +204,7 @@ if ( ! function_exists( 'mrss_init' ) ) {
 						if ( ! is_array( $_data ) ) {
 							echo ent2ncr( esc_html( $_data ) );
 						} else {
-							// allow nested same level elements
+							// allow nested same level elements.
 							$nl = true;
 							mrss_print( $_data, $indent + 1 );
 						}
@@ -184,10 +215,10 @@ if ( ! function_exists( 'mrss_init' ) ) {
 				}
 
 				if ( $nl ) {
-					echo str_repeat( "\t", $indent );
+					echo str_repeat( "\t", $indent ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- Names are set in code or by the mrss_media filter; values are escaped.
 				}
 
-				echo "</media:$name>\n";
+				echo "</media:$name>\n"; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- Names are set in code or by the mrss_media filter; values are escaped.
 			} else {
 				echo " />\n";
 			}

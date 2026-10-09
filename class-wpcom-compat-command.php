@@ -1,5 +1,13 @@
 <?php
+/**
+ * WP-CLI commands for sites that moved from WordPress.com.
+ *
+ * @package VIP_Go_WPCOM_Compat
+ */
 
+/**
+ * WordPress.com compatibility commands.
+ */
 class WPCOM_Compat_Command extends WPCOM_VIP_CLI_Command {
 
 	/**
@@ -11,15 +19,17 @@ class WPCOM_Compat_Command extends WPCOM_VIP_CLI_Command {
 	 * : The CSV file to import
 	 *
 	 * @subcommand import-protected-embeds
+	 *
+	 * @param array $args Positional arguments.
 	 */
-	function import_protected_embeds( $args ) {
+	public function import_protected_embeds( $args ) {
 		list( $file ) = $args;
 
 		if ( ! file_exists( $file ) ) {
 			WP_CLI::error( 'Specified file does not exist' );
 		}
 
-		$fd = fopen( $file, 'r' );
+		$fd = fopen( $file, 'r' ); // phpcs:ignore WordPress.WP.AlternativeFunctions.file_system_operations_fopen -- Reads the CSV from wherever the user put it, not the uploads directory.
 		if ( ! $fd ) {
 			WP_CLI::error( sprintf( 'Could not open file: %s', $file ) );
 		}
@@ -46,7 +56,7 @@ class WPCOM_Compat_Command extends WPCOM_VIP_CLI_Command {
 			'UNIQUE KEY `embed_id` (`embed_id`) ' .
 			') ENGINE=InnoDB AUTO_INCREMENT=0';
 
-		require_once( ABSPATH . 'wp-admin/includes/upgrade.php' );
+		require_once ABSPATH . 'wp-admin/includes/upgrade.php';
 		$q = dbDelta( $sql );
 		WP_CLI::line( $q['protected_embeds'] );
 
@@ -59,13 +69,13 @@ class WPCOM_Compat_Command extends WPCOM_VIP_CLI_Command {
 				continue;
 			}
 
-			$insert = $wpdb->insert( 'protected_embeds', $data );
+			$insert = $wpdb->insert( 'protected_embeds', $data ); // phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery -- The plugin's own table.
 			if ( ! $insert ) {
 				WP_CLI::warning( "Could not insert embed: `{$data['id']}`" );
 				WP_CLI::warning( $wpdb->last_error );
-				$errors++;
+				++$errors;
 			} else {
-				$success++;
+				++$success;
 			}
 		}
 
@@ -78,4 +88,4 @@ class WPCOM_Compat_Command extends WPCOM_VIP_CLI_Command {
 	}
 }
 
-WP_CLI::add_command( 'wpcom-compat', new WPCOM_Compat_Command );
+WP_CLI::add_command( 'wpcom-compat', new WPCOM_Compat_Command() );
