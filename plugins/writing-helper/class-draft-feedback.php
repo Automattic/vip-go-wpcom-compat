@@ -379,13 +379,6 @@ Regards,
 	function the_posts_intercept( $posts, $wp_query ) {
 		if ( ! $wp_query->is_main_query() ) {
 			$overwrite_post = false;
-		} elseif (
-			! empty( $posts )
-			&& ( isset( $_GET['nux'] )
-			&& $_GET['nux'] == 'nuts' )
-		) {
-			// site admins always have a post
-			$overwrite_post = true;
 		} elseif ( ! is_null( $this->shared_post ) ) {
 			$overwrite_post = true;
 		} else {

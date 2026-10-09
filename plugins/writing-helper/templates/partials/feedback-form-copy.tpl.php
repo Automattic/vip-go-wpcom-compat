@@ -55,13 +55,13 @@
 								class="button-secondary"
 								id="cp-<?php the_ID() ?>" />
 						&nbsp;
-						<span class="title"><?php echo $sticky_post->post_title ?></span>
+						<span class="title"><?php echo esc_html( wp_strip_all_tags( $sticky_post->post_title ) ); ?></span>
 						<?php if ( strlen( $sticky_post->post_content ) > MB_IN_BYTES / 5 ) : ?>
 							<span class="excerpt">
 								<?php esc_html_e( 'Excerpt cannot be retrieved.', 'writing-helper' ); ?>
 							</span>
 						<?php else: ?>
-							<span class="excerpt"><?php echo strip_tags( get_the_excerpt() ) ?></span>
+							<span class="excerpt"><?php echo esc_html( wp_strip_all_tags( get_the_excerpt() ) ); ?></span>
 						<?php endif; ?>
 					</li>
 				<?php endforeach; ?>
@@ -88,7 +88,7 @@
 			jQuery( function() {
 				jQuery( 'li#menu-posts li, li#menu-posts li a' ).removeClass( 'current' );
 				jQuery( 'li#menu-posts li a[href="post-new.php?cap#cap"]' ).addClass('current').parent('li').addClass('current');
-				jQuery.post( ajaxurl, { 'action': 'helper_record_stat', 'stat': 'menu_click' } );
+				jQuery.post( ajaxurl, { 'action': 'helper_record_stat', 'stat': 'menu_click', 'nonce': WritingHelperBox.blog_nonce } );
 			});
 		</script>
 	<?php endif; ?>

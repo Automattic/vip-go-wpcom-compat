@@ -75,6 +75,16 @@ final class WritingHelperTest extends TestCase {
 		$this->assertSame( $expected, ( new Writing_Helper_Draft_Feedback() )->can_view( $post_id ) );
 	}
 
+	public function test_nux_parameter_no_longer_replaces_the_main_query_without_a_shared_post(): void {
+		$query                   = new \WP_Query();
+		$GLOBALS['wp_the_query'] = $query;
+		$_GET['shareadraft']     = 'anything';
+		$_GET['nux']             = 'nuts';
+		$posts                   = array( self::factory()->post->create_and_get() );
+
+		$this->assertSame( $posts, ( new Writing_Helper_Draft_Feedback() )->the_posts_intercept( $posts, $query ) );
+	}
+
 	public function test_contributor_can_only_copy_published_posts_and_their_own_drafts(): void {
 		$contributor = self::factory()->user->create( array( 'role' => 'contributor' ) );
 		$author      = self::factory()->user->create( array( 'role' => 'author' ) );

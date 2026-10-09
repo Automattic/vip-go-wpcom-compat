@@ -161,7 +161,7 @@ class Writer_Helper_Copy_Post {
 		$_REQUEST = stripslashes_deep( $_REQUEST );
 		$post_id = (int) $_REQUEST['post_id'];
 
-		if ( empty( $post_id ) )
+		if ( empty( $post_id ) || ! current_user_can( 'edit_posts' ) || ! self::can_copy( get_post( $post_id ) ) )
 			die( '-1' );
 
 		// Get sticky posts for the blog.
@@ -181,6 +181,12 @@ class Writer_Helper_Copy_Post {
     }
 
 	function add_ajax_record_stat_endpoint() {
+		check_ajax_referer( 'writing_helper_nonce_' . get_current_blog_id(), 'nonce' );
+
+		if ( ! current_user_can( 'edit_posts' ) ) {
+			die( '-1' );
+		}
+
 		$_REQUEST = stripslashes_deep( $_REQUEST );
 		$stat = $_REQUEST['stat'];
 
