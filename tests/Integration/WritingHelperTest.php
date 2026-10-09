@@ -127,9 +127,10 @@ final class WritingHelperTest extends TestCase {
 
 	public function test_post_types_without_writing_helper_support_are_not_searched(): void {
 		wp_set_current_user( self::factory()->user->create( array( 'role' => 'administrator' ) ) );
-		self::factory()->post->create( array( 'post_type' => 'attachment' ) );
+		// A published post of a type that doesn't use Writing Helper.
+		self::factory()->post->create( array( 'post_type' => 'wp_block' ) );
 
-		$this->assertSame( array(), Writer_Helper_Copy_Post::get_candidate_posts( 'attachment' ) );
+		$this->assertSame( array(), Writer_Helper_Copy_Post::get_candidate_posts( 'wp_block' ) );
 	}
 
 	public function test_post_password_is_removed_before_output(): void {
