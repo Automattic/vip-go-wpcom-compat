@@ -9,11 +9,12 @@ declare( strict_types = 1 );
 
 namespace Automattic\VIPGoWPCOMCompat\Tests\Integration;
 
+use Writer_Helper_Copy_Post;
 use Writing_Helper_Draft_Feedback;
 use Yoast\WPTestUtils\WPIntegration\TestCase;
 
 /**
- * Draft share links should only reveal what the user is allowed to see.
+ * Draft share links and Copy a Post should only reveal what the user is allowed to see.
  */
 final class WritingHelperTest extends TestCase {
 
@@ -72,5 +73,58 @@ final class WritingHelperTest extends TestCase {
 		$_REQUEST['shareadraft'] = $key;
 
 		$this->assertSame( $expected, ( new Writing_Helper_Draft_Feedback() )->can_view( $post_id ) );
+	}
+
+	public function test_contributor_can_only_copy_published_posts_and_their_own_drafts(): void {
+		$contributor = self::factory()->user->create( array( 'role' => 'contributor' ) );
+		$author      = self::factory()->user->create( array( 'role' => 'author' ) );
+
+		$published   = self::factory()->post->create( array( 'post_author' => $author ) );
+		$own_draft   = self::factory()->post->create(
+			array(
+				'post_author' => $contributor,
+				'post_status' => 'draft',
+			)
+		);
+		$other_draft = self::factory()->post->create(
+			array(
+				'post_author' => $author,
+				'post_status' => 'draft',
+			)
+		);
+		$protected   = self::factory()->post->create(
+			array(
+				'post_author'   => $author,
+				'post_password' => 'secret',
+			)
+		);
+		wp_set_current_user( $contributor );
+
+		$ids = wp_list_pluck( Writer_Helper_Copy_Post::get_candidate_posts( 'post' ), 'ID' );
+
+		$this->assertContains( $published, $ids );
+		$this->assertContains( $own_draft, $ids );
+		$this->assertNotContains( $other_draft, $ids );
+		$this->assertNotContains( $protected, $ids );
+	}
+
+	public function test_editor_can_copy_password_protected_posts(): void {
+		$protected = self::factory()->post->create_and_get( array( 'post_password' => 'secret' ) );
+		wp_set_current_user( self::factory()->user->create( array( 'role' => 'editor' ) ) );
+
+		$this->assertTrue( Writer_Helper_Copy_Post::can_copy( $protected ) );
+	}
+
+	public function test_post_types_without_writing_helper_support_are_not_searched(): void {
+		wp_set_current_user( self::factory()->user->create( array( 'role' => 'administrator' ) ) );
+		self::factory()->post->create( array( 'post_type' => 'attachment' ) );
+
+		$this->assertSame( array(), Writer_Helper_Copy_Post::get_candidate_posts( 'attachment' ) );
+	}
+
+	public function test_post_password_is_removed_before_output(): void {
+		$post = self::factory()->post->create_and_get( array( 'post_password' => 'secret' ) );
+
+		$this->assertSame( '', Writer_Helper_Copy_Post::prepare_for_output( $post )->post_password );
 	}
 }
