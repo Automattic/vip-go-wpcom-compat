@@ -55,8 +55,5 @@ jobs:
       - name: PHP syntax lint
         run: composer lint-ci | cs2pr
 
-      # The legacy code predates PHPCS, and fixing it wholesale risks changing behaviour
-      # that sites rely on. Report violations as annotations without failing the build.
       - name: PHP coding standards
-        continue-on-error: true
         run: composer cs -- --report=checkstyle | cs2pr

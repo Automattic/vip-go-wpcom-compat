@@ -56,7 +56,9 @@ composer test:integration-ms # Integration tests (multisite, needs wp-env)
 
 ## Code Standards
 
-We follow the [WordPress VIP Coding Standards](https://github.com/Automattic/VIP-Coding-Standards), configured in `.phpcs.xml.dist`. Much of the existing code predates them, so CI reports violations without failing the build. Please don't add new ones, and keep coding standards fixes to existing code in their own pull requests, separate from behaviour changes.
+We follow the [WordPress VIP Coding Standards](https://github.com/Automattic/VIP-Coding-Standards), configured in `.phpcs.xml.dist`. CI fails on any violation. Run `composer cs-fix` to fix what PHPCS can fix automatically.
+
+Where PHPCS flags code that has to stay as it is, because changing it would change behaviour that sites rely on, add a `// phpcs:ignore` comment naming the sniff and giving the reason, as the existing code does. Keep coding standards changes in their own pull requests, separate from behaviour changes.
 
 `plugins/writing-helper/` is a subtree of [Automattic/writing-helper](https://github.com/Automattic/writing-helper), so changes to it belong upstream.
 
