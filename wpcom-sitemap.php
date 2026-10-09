@@ -330,15 +330,15 @@ function wpcom_print_news_sitemap($format) {
 	$cur_datetime = current_time( 'mysql', true );
 
 	$query = $wpdb->prepare( "
-		SELECT p.ID, p.post_title, p.post_type, p.post_date, p.post_name, p.post_date_gmt, GROUP_CONCAT(t.name SEPARATOR ', ') AS keywords
+		SELECT p.ID, p.post_title, p.post_type, p.post_date, p.post_name, p.post_date, GROUP_CONCAT(t.name SEPARATOR ', ') AS keywords
 		FROM
 			$wpdb->posts AS p LEFT JOIN $wpdb->term_relationships AS r ON p.ID = r.object_id
 			LEFT JOIN $wpdb->term_taxonomy AS tt ON r.term_taxonomy_id = tt.term_taxonomy_id AND tt.taxonomy = 'post_tag'
 			LEFT JOIN $wpdb->terms AS t ON tt.term_id = t.term_id
 		WHERE
-			post_status='publish' AND post_type IN ( {$post_types_in_string} ) AND post_date_gmt > (%s - INTERVAL 2 DAY)
+			post_status='publish' AND post_type IN ( {$post_types_in_string} ) AND post_date > (%s - INTERVAL 2 DAY)
 		GROUP BY p.ID
-		ORDER BY p.post_date_gmt DESC LIMIT %d", $cur_datetime, $limit );
+		ORDER BY p.post_date DESC LIMIT %d", $cur_datetime, $limit );
 
 
 	header('Content-Type: application/xml');
