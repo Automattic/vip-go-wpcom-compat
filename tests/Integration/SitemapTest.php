@@ -116,6 +116,26 @@ final class SitemapTest extends TestCase {
 		);
 	}
 
+	public function test_robots_txt_lists_both_sitemaps(): void {
+		$this->expectOutputString(
+			'Sitemap: ' . home_url( '/sitemap.xml', 'http' ) . PHP_EOL
+			. 'Sitemap: ' . home_url( '/news-sitemap.xml', 'http' ) . PHP_EOL . PHP_EOL
+		);
+
+		\WPCOM_Sitemap\sitemap_discovery();
+	}
+
+	public function test_sitemap_location_filter_changes_the_sitemap_url(): void {
+		add_filter(
+			'sitemap_location',
+			static function () {
+				return 'https://example.com/custom-sitemap.xml';
+			}
+		);
+
+		$this->assertSame( 'https://example.com/custom-sitemap.xml', \WPCOM_Sitemap\sitemap_uri() );
+	}
+
 	/**
 	 * Build the main sitemap, and return it without printing it.
 	 *
