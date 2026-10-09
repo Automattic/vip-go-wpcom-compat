@@ -452,6 +452,11 @@ function wpcom_print_news_sitemap( $format ) { // phpcs:ignore Generic.CodeAnaly
 function sitemap_uri() {
 	global $current_blog;
 
+	// $current_blog is only set on multisite. Match its http:// URL on single sites too.
+	if ( ! $current_blog ) {
+		return apply_filters( 'sitemap_location', home_url( '/sitemap.xml', 'http' ) );
+	}
+
 	$domain = $current_blog->primary_redirect ? $current_blog->primary_redirect : $current_blog->domain;
 	return apply_filters( 'sitemap_location', 'http://' . $domain . '/sitemap.xml' );
 }

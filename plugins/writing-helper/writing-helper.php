@@ -9,7 +9,7 @@ Author URI: http://automattic.com/
 Text Domain: writing-helper
 */
 
-define( 'WH_VERSION', '1.0.1' );
+define( 'WH_VERSION', '1.0.2' );
 
 if ( ! defined( 'MB_IN_BYTES' ) )
 	define( 'MB_IN_BYTES', 1024 * 1024 );
@@ -222,7 +222,7 @@ class Writing_Helper {
 		// strict mime-type policies
 		header(
 			'Content-Type: application/'
-			. $is_jsonp ? 'javascript' : 'json'
+			. ( $is_jsonp ? 'javascript' : 'json' )
 			. '; charset=' . $charset,
 			true
 		);

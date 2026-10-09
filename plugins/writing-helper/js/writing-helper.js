@@ -20,7 +20,8 @@ jQuery(function($) {
 			if ($this.data('replaced-placeholders')) return;
 			var text = $this.val();
 			var excerpt = $post_content.text();
-			excerpt = $('<div>'+excerpt+'</div>').text().replace(/\n+/g, ' ');
+			// DOMParser builds an inert document, so markup in the content can't run.
+			excerpt = new DOMParser().parseFromString(excerpt, 'text/html').body.textContent.replace(/\n+/g, ' ');
 			if (excerpt.length > 300) {
 				excerpt = excerpt.substr(0, 300)+'...';
 			}
@@ -31,7 +32,7 @@ jQuery(function($) {
 		});
 	};
 	var display_error = function(id, notice) {
-		$(id).after('<div id="draft-error" class="error"><p>' + notice + '</p></div>');
+		$(id).after($('<div id="draft-error" class="error"><p></p></div>').find('p').text(notice).end());
 		$('#draft-error').delay(4000).fadeOut('slow');
 	}
 	var publish_new_requests = function( data ) {

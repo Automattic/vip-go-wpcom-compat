@@ -36,6 +36,16 @@ final class ProtectedEmbedShortcodeTest extends TestCase {
 		return self::TABLE;
 	}
 
+	public function test_embed_table_defaults_to_wp_protected_embeds(): void {
+		remove_filter( 'wpcom_protected_embed_table', array( $this, 'table_name' ) );
+
+		$this->assertSame( 'wp_protected_embeds', wpcom_compat_protected_embed_table() );
+	}
+
+	public function test_embed_table_can_be_filtered(): void {
+		$this->assertSame( self::TABLE, wpcom_compat_protected_embed_table() );
+	}
+
 	public function test_renders_a_stored_embed(): void {
 		$this->assertSame( '<iframe src="https://example.com"></iframe>', do_shortcode( '[protected-iframe id="abc123"]' ) );
 	}

@@ -45,7 +45,10 @@ class WPCOM_Compat_Command extends WPCOM_VIP_CLI_Command {
 			WP_CLI::error( 'Invalid CSV, missing required fields' );
 		}
 
-		$sql = 'CREATE TABLE `protected_embeds` ( ' .
+		// Import into the table the [protected-iframe] shortcode reads from.
+		$table = wpcom_compat_protected_embed_table();
+
+		$sql = "CREATE TABLE `{$table}` ( " .
 			'`id` bigint(20) unsigned NOT NULL AUTO_INCREMENT, ' .
 			'`embed_id` varchar(64) NOT NULL, ' .
 			'`src` varchar(255) NOT NULL, ' .
@@ -57,8 +60,9 @@ class WPCOM_Compat_Command extends WPCOM_VIP_CLI_Command {
 			') ENGINE=InnoDB AUTO_INCREMENT=0';
 
 		require_once ABSPATH . 'wp-admin/includes/upgrade.php';
-		$q = dbDelta( $sql );
-		WP_CLI::line( $q['protected_embeds'] );
+		foreach ( dbDelta( $sql ) as $message ) {
+			WP_CLI::line( $message );
+		}
 
 		global $wpdb;
 		$success = 0;
@@ -69,7 +73,7 @@ class WPCOM_Compat_Command extends WPCOM_VIP_CLI_Command {
 				continue;
 			}
 
-			$insert = $wpdb->insert( 'protected_embeds', $data ); // phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery -- The plugin's own table.
+			$insert = $wpdb->insert( $table, $data ); // phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery -- The plugin's own table.
 			if ( ! $insert ) {
 				WP_CLI::warning( "Could not insert embed: `{$data['id']}`" );
 				WP_CLI::warning( $wpdb->last_error );

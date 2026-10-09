@@ -237,7 +237,7 @@ Regards,
 			$email = $this->_normalize_email( $email );
 			if ( !isset( $requests[$email] ) ) {
 				$requests[$email] = array(
-					'key'		=> uniqid(),
+					'key'		=> self::generate_key(),
 					'time'		=> time(),
 					'user_id' 	=> $current_user->ID,
 				);
@@ -305,6 +305,18 @@ Regards,
 	}
 
 	/**
+	 * Generate the secret key for a share link.
+	 *
+	 * Keys used to come from uniqid(), which is a timestamp and easy to guess. Links
+	 * that already use those keys keep working.
+	 *
+	 * @return string
+	 */
+	public static function generate_key() {
+		return wp_generate_password( 32, false );
+	}
+
+	/**
 	 * Was this post (url) designed to be shared?
 	 */
 	function can_view( $post_id ) {
@@ -312,8 +324,11 @@ Regards,
 		if ( !isset($_REQUEST['shareadraft']) || !$requests ) {
 			return false;
 		}
+		if ( ! is_string( $_REQUEST['shareadraft'] ) ) {
+			return false;
+		}
 		foreach ( $requests as $email => $request ) {
-			if ( $request['key'] == $_REQUEST['shareadraft'] && !isset( $request['revoked'] ) ) {
+			if ( hash_equals( (string) $request['key'], $_REQUEST['shareadraft'] ) && !isset( $request['revoked'] ) ) {
 				$this->request_email = $email;
 				return true;
 			}
@@ -364,13 +379,6 @@ Regards,
 	function the_posts_intercept( $posts, $wp_query ) {
 		if ( ! $wp_query->is_main_query() ) {
 			$overwrite_post = false;
-		} elseif (
-			! empty( $posts )
-			&& ( isset( $_GET['nux'] )
-			&& $_GET['nux'] == 'nuts' )
-		) {
-			// site admins always have a post
-			$overwrite_post = true;
 		} elseif ( ! is_null( $this->shared_post ) ) {
 			$overwrite_post = true;
 		} else {
@@ -633,7 +641,7 @@ Thanks for flying with WordPress.com', 'writing-helper' ),
 		if ( !$post_id || !$this->can_mail( $post_id ) )
 			$this->json_die_with_error( __( 'Access denied', 'writing-helper' ) );
 
-		$key = uniqid();
+		$key = self::generate_key();
 		$requests = $this->get_requests( $post_id );
 		$requests[$key] = array(
 					'key'		=> $key,
