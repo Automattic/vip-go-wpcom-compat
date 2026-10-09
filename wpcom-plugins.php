@@ -1,4 +1,9 @@
 <?php
+/**
+ * Plugin loading compatibility with WordPress.com.
+ *
+ * @package VIP_Go_WPCOM_Compat
+ */
 
 /**
  * Loads a plugin on VIP Go, with compatability for the way things were done on WPcom.
@@ -29,6 +34,11 @@ function wpcom_vip_legacy_load_plugin( $plugin = false, $folder = false, $versio
  * This doesn't work out well in cases where "plugins" are still being used in themes/theme-name/plugins.
  *
  * @see https://developer.wordpress.org/reference/functions/plugins_url/
+ *
+ * @param string $final_url          The URL plugins_url() built.
+ * @param string $requested_file     The path requested, relative to the plugin.
+ * @param string $relative_file_path The file the path is relative to.
+ * @return string The URL, pointing inside the theme where the file is in one.
  */
 function vip_wpcom_compat_allow_plugins_url_inside_themes( $final_url, $requested_file, $relative_file_path ) {
 	$themes_dir = WP_CONTENT_DIR . '/themes';

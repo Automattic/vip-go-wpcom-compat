@@ -1,4 +1,9 @@
 <?php
+/**
+ * Shortcodes from WordPress.com.
+ *
+ * @package VIP_Go_WPCOM_Compat
+ */
 
 /**
  * Provides simple backwards compatability with WordPress.com Protected Embeds.
@@ -6,6 +11,9 @@
  *
  * If a site wants to use a different protected embeds plugin, they can by calling
  * `remove_shortcode( 'protected-iframe' )` before loading the other plugin.
+ *
+ * @param array|string $attrs Shortcode attributes.
+ * @return string The embed's HTML, or a comment if it isn't found.
  */
 function wpcom_compat_protected_iframe_shortcode( $attrs ) {
 	$attrs = wp_parse_args(

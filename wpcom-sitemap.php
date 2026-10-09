@@ -1,22 +1,21 @@
 <?php
-
-namespace WPCOM_Sitemap;
-
 /**
  * Generate sitemap files in base XML as well as popular namespace extensions
  *
+ * @package VIP_Go_WPCOM_Compat
  * @author Automattic
  * @version 2.0
  * @link http://sitemaps.org/protocol.php Base sitemaps protocol
  * @link http://www.google.com/support/webmasters/bin/answer.py?answer=74288 Google news sitemaps
  */
 
+namespace WPCOM_Sitemap;
 
 /**
  * Convert a MySQL datetime string to an ISO 8601 string
  *
  * @link http://www.w3.org/TR/NOTE-datetime W3C date and time formats document
- * @param string $mysql_date UTC datetime in MySQL syntax of YYYY-MM-DD HH:MM:SS
+ * @param string $mysql_date UTC datetime in MySQL syntax of YYYY-MM-DD HH:MM:SS.
  * @return string ISO 8601 UTC datetime string formatted as YYYY-MM-DDThh:mm:ssTZD where timezone offset is always +00:00
  */
 function w3cdate_from_mysql( $mysql_date ) {
@@ -31,7 +30,7 @@ function w3cdate_from_mysql( $mysql_date ) {
 function sitemap_cache_key() {
 	// en.wordpress.com and other xx.wordpress.com blogs
 	// have same blog id but need separate URLS in the sitemap
-	// otherwise we get de.wordpress.com URLs for en.wordpress.com/sitemap.xml
+	// otherwise we get de.wordpress.com URLs for en.wordpress.com/sitemap.xml.
 	$sitemap_cache_key = 'sitemap-blog-' . get_locale() . '-' . $GLOBALS['blog_id'];
 
 	return apply_filters( 'sitemap_cache_key', $sitemap_cache_key );
@@ -40,7 +39,7 @@ function sitemap_cache_key() {
 /**
  * Get the maximum comment_date_gmt value for approved comments for the given post_id
  *
- * @param int $post_id post identifier
+ * @param int $post_id post identifier.
  * @return string datetime MySQL value or null if no comment found
  */
 function get_approved_comments_max_datetime( $post_id ) {
@@ -58,10 +57,20 @@ function sitemap_content_type() {
 	return apply_filters( 'sitemap_content_type', 'text/xml' );
 }
 
+/**
+ * Print a sitemap url element.
+ *
+ * @param array $data Child elements of the url element, keyed by name.
+ */
 function wpcom_print_sitemap_item( $data ) {
 	wpcom_print_xml_tag( array( 'url' => $data ) );
 }
 
+/**
+ * Print XML elements from an array, recursively.
+ *
+ * @param array $array Elements, keyed by name, with string or array values.
+ */
 function wpcom_print_xml_tag( $array ) {
 	foreach ( $array as $key => $value ) {
 		if ( is_array( $value ) ) {
@@ -77,15 +86,15 @@ function wpcom_print_xml_tag( $array ) {
 /**
  * Convert an array to a SimpleXML child of the passed tree.
  *
- * @param array            $data array containing element value pairs, including other arrays, for XML contruction
- * @param SimpleXMLElement $tree A SimpleXMLElement class object used to attach new children
+ * @param array            $data array containing element value pairs, including other arrays, for XML contruction.
+ * @param SimpleXMLElement $tree A SimpleXMLElement class object used to attach new children.
  * @return SimpleXMLElement full tree with new children mapped from array
  */
 function wpcom_sitemap_array_to_simplexml( $data, &$tree ) {
 	$doc_namespaces = $tree->getDocNamespaces();
 
 	foreach ( $data as $key => $value ) {
-		// Allow namespaced keys by use of colon in $key, namespaces must be part of the document
+		// Allow namespaced keys by use of colon in $key, namespaces must be part of the document.
 		$namespace = null;
 		if ( false !== strpos( $key, ':' ) ) {
 			list( $namespace_prefix, $key ) = explode( ':', $key );
@@ -118,13 +127,19 @@ function wpcom_sitemap_namespaces() {
 			'xmlns:xsi'          => 'http://www.w3.org/2001/XMLSchema-instance',
 			'xsi:schemaLocation' => 'http://www.sitemaps.org/schemas/sitemap/0.9 http://www.sitemaps.org/schemas/sitemap/0.9/sitemap.xsd',
 			'xmlns'              => 'http://www.sitemaps.org/schemas/sitemap/0.9',
-			// Mobile namespace from http://support.google.com/webmasters/bin/answer.py?hl=en&answer=34648
+			// Mobile namespace from http://support.google.com/webmasters/bin/answer.py?hl=en&answer=34648 .
 			'xmlns:mobile'       => 'http://www.google.com/schemas/sitemap-mobile/1.0',
 			'xmlns:image'        => 'http://www.google.com/schemas/sitemap-image/1.1',
 		) 
 	);
 }
 
+/**
+ * Build the opening of the sitemap XML document.
+ *
+ * @param string $charset Character encoding for the XML declaration.
+ * @return string XML declaration, generator comment and empty urlset element.
+ */
 function wpcom_sitemap_initstr( $charset ) {
 	$initstr  = '<?xml version="1.0" encoding="' . $charset . '"?>' . "\n" . '<!-- generator="wordpress.com" -->' . "\n";
 	$initstr .= '<urlset';
@@ -161,8 +176,7 @@ function wpcom_print_sitemap() {
 		}
 		$post_types_in = join( ',', $post_types_in );
 
-		// use direct query instead because get_posts was acting too heavy for our needs
-		// $posts = get_posts( array( 'numberposts'=>1000, 'post_type'=>$post_types, 'post_status'=>'published' ) );
+		// use direct query instead because get_posts was acting too heavy for our needs.
 		$posts = $wpdb->get_results( "SELECT ID, post_type, post_modified_gmt, comment_count FROM $wpdb->posts WHERE post_status='publish' AND post_type IN ({$post_types_in}) ORDER BY post_modified_gmt DESC LIMIT 1000" );
 		if ( empty( $posts ) ) {
 			header( 'HTTP/1.0 404 Not Found', true, 404 );
@@ -176,7 +190,7 @@ function wpcom_print_sitemap() {
 			$tree    = simplexml_load_string( $initstr );
 		}
 
-		// Acquire necessary attachment data for all of the posts in a performant manner
+		// Acquire necessary attachment data for all of the posts in a performant manner.
 		$attachment_parents = wp_list_pluck( $posts, 'ID' );
 		$post_attachments   = array();
 		while ( $sub_posts = array_splice( $attachment_parents, 0, 100 ) ) {
@@ -194,7 +208,7 @@ function wpcom_print_sitemap() {
 					$attachment_count[ $attachment->post_parent ] = 0;
 				}
 
-				// Skip this particular attachment if we already have 5 for the post
+				// Skip this particular attachment if we already have 5 for the post.
 				if ( $attachment_count[ $attachment->post_parent ] >= 5 ) {
 					continue;
 				}
@@ -203,12 +217,12 @@ function wpcom_print_sitemap() {
 				++$attachment_count[ $attachment->post_parent ];
 			}
 
-			// bail if there weren't any attachments to avoid an extra query
+			// bail if there weren't any attachments to avoid an extra query.
 			if ( empty( $selected_attachments ) ) {
 				continue;
 			}
 
-			// Get more of the attachment object for the attachments we actually care about
+			// Get more of the attachment object for the attachments we actually care about.
 			$attachment_ids   = implode( ',', array_map( 'intval', $selected_attachments ) );
 			$query            = "SELECT p.ID, p.post_parent, p.post_title, p.post_excerpt, p.guid FROM {$wpdb->posts} as p WHERE p.ID IN ({$attachment_ids}) AND p.post_type='attachment' AND p.post_mime_type='image/jpeg' LIMIT 500;";
 			$attachments      = $wpdb->get_results( $query );
@@ -219,7 +233,7 @@ function wpcom_print_sitemap() {
 		$latest_mod = '';
 		foreach ( $posts as $post ) {
 
-			// Add in filter to allow skipping specific posts
+			// Add in filter to allow skipping specific posts.
 			if ( apply_filters( 'sitemap_skip_post', false, $post ) ) {
 				continue;
 			}
@@ -227,11 +241,11 @@ function wpcom_print_sitemap() {
 			$post_latest_mod = null;
 			$url             = array( 'loc' => esc_url( get_permalink( $post->ID ) ) );
 
-			// Mobile node specified in http://support.google.com/webmasters/bin/answer.py?hl=en&answer=34648
+			// Mobile node specified in http://support.google.com/webmasters/bin/answer.py?hl=en&answer=34648 .
 			$url['mobile:mobile'] = '';
 
 			// Image node specified in http://support.google.com/webmasters/bin/answer.py?hl=en&answer=178636
-			// These attachments were produced with batch SQL earlier in the script
+			// These attachments were produced with batch SQL earlier in the script.
 			if ( ! post_password_required( $post->ID ) && $attachments = wp_filter_object_list( $post_attachments, array( 'post_parent' => $post->ID ) ) ) {
 
 				$url['image:image'] = array();
@@ -246,7 +260,7 @@ function wpcom_print_sitemap() {
 
 						$attachment_url = apply_filters( 'get_the_guid', $attachment->guid );
 
-						// If we don't have an attachment URL, don't include this image
+						// If we don't have an attachment URL, don't include this image.
 						$attachment_url = apply_filters( 'wp_get_attachment_url', $attachment_url, $attachment->ID );
 
 						if ( ! $attachment_url ) {
@@ -257,12 +271,12 @@ function wpcom_print_sitemap() {
 						$url['image:image']['loc'] = esc_url( $attachment_url );
 					}
 
-					// Only include title if not empty
+					// Only include title if not empty.
 					if ( $attachment_title = apply_filters( 'the_title_rss', $attachment->post_title ) ) {
 						$url['image:image']['title'] = html_entity_decode( esc_html( $attachment_title ), ENT_XML1 );
 					}
 
-					// Only include caption if not empty
+					// Only include caption if not empty.
 					if ( $attachment_caption = apply_filters( 'the_excerpt_rss', $attachment->post_excerpt ) ) {
 						$url['image:image']['caption'] = html_entity_decode( esc_html( $attachment_caption ), ENT_XML1 );
 					}
@@ -273,7 +287,7 @@ function wpcom_print_sitemap() {
 				$post_latest_mod = $post->post_modified_gmt;
 			}
 			if ( $post->comment_count > 0 ) {
-				// last modified based on last comment
+				// last modified based on last comment.
 				$latest_comment_datetime = get_approved_comments_max_datetime( $post->ID );
 				if ( ! empty( $latest_comment_datetime ) ) {
 					if ( is_null( $post_latest_mod ) || $latest_comment_datetime > $post_latest_mod ) {
@@ -289,7 +303,7 @@ function wpcom_print_sitemap() {
 			unset( $post_latest_mod );
 			if ( $post->post_type == 'page' ) {
 				$url['changefreq'] = 'weekly';
-				$url['priority']   = '0.6'; // set page priority above default priority of 0.5
+				$url['priority']   = '0.6'; // set page priority above default priority of 0.5.
 			} else {
 				$url['changefreq'] = 'monthly';
 			}
@@ -313,7 +327,7 @@ function wpcom_print_sitemap() {
 		$xml = $tree->asXML();
 		unset( $tree );
 		if ( ! empty( $xml ) ) {
-			wp_cache_set( $key, $xml, 'sitemap', 24 * 60 * 60 );  // cache for 24 hours
+			wp_cache_set( $key, $xml, 'sitemap', 24 * 60 * 60 );  // cache for 24 hours.
 			echo $xml;
 		}
 	} else {
@@ -323,6 +337,11 @@ function wpcom_print_sitemap() {
 	die();
 }
 
+/**
+ * Print a Google News sitemap of the posts published in the last two days.
+ *
+ * @param mixed $format Unused.
+ */
 function wpcom_print_news_sitemap( $format ) {
 	if ( defined( 'WPCOM_SKIP_DEFAULT_NEWS_SITEMAP' ) && WPCOM_SKIP_DEFAULT_NEWS_SITEMAP ) {
 		return;
@@ -377,7 +396,7 @@ function wpcom_print_news_sitemap( $format ) {
 	}
 	foreach ( $posts as $post ) :
 
-		// Add in filter to allow skipping specific posts
+		// Add in filter to allow skipping specific posts.
 		if ( apply_filters( 'wpcom_sitemap_news_skip_post', false, $post ) ) {
 			continue;
 		}
@@ -397,7 +416,7 @@ function wpcom_print_news_sitemap( $format ) {
 		}
 		$url['news:news'] = $news;
 
-		// Add image to sitemap
+		// Add image to sitemap.
 		if ( current_theme_supports( 'post-thumbnails' ) && has_post_thumbnail( $post->ID ) ) {
 			$post_thumbnail_id  = get_post_thumbnail_id( $post->ID );
 			$post_thumbnail_src = wp_get_attachment_image_src( $post_thumbnail_id );
@@ -452,7 +471,7 @@ function sitemap_endpoints() {
 		'sitemap_ping_uris',
 		array(
 			'www.google.com/webmasters/tools/ping?sitemap=',
-			'http://search.yahooapis.com/SiteExplorerService/V1/updateNotification?appid=' . urlencode( WPAS__YAHOO_UPDATES_APPLICATION_ID ) . '&url=', // appid is WPCOM id
+			'http://search.yahooapis.com/SiteExplorerService/V1/updateNotification?appid=' . urlencode( WPAS__YAHOO_UPDATES_APPLICATION_ID ) . '&url=', // appid is WPCOM id.
 			'http://www.bing.com/webmaster/ping.aspx?siteMap=',
 		)
 	);
@@ -460,6 +479,8 @@ function sitemap_endpoints() {
 
 /**
  * Ping all registered HTTP endpoints for sitemap URIs
+ *
+ * @param object $job Pings job, whose data holds the sitemap URI and endpoints.
  */
 function do_sitemap_pings( $job ) {
 	if ( empty( $job->data->sitemap_uri ) ) {
@@ -538,9 +559,9 @@ if ( ! function_exists( 'is_publicly_available' ) || is_publicly_available() ) {
 	$protocol    = is_ssl() ? 'https://' : 'http://';
 	$request_url = isset( $_SERVER['HTTP_HOST'] ) ? $protocol . $_SERVER['HTTP_HOST'] . $_SERVER['REQUEST_URI'] : '';
 	if ( $request_url == home_url( 'sitemap.xml' ) ) {
-		add_action( 'init', __NAMESPACE__ . '\\wpcom_print_sitemap', 999 ); // run later so things like custom post types have been registered
+		add_action( 'init', __NAMESPACE__ . '\\wpcom_print_sitemap', 999 ); // run later so things like custom post types have been registered.
 	} elseif ( $request_url == home_url( 'news-sitemap.xml' ) ) {
-		add_action( 'init', __NAMESPACE__ . '\\wpcom_print_news_sitemap', 999 ); // run later so things like custom post types have been registered
+		add_action( 'init', __NAMESPACE__ . '\\wpcom_print_news_sitemap', 999 ); // run later so things like custom post types have been registered.
 
 	}
 }

@@ -1,10 +1,18 @@
 <?php
 /**
+ * MediaRSS for RSS feeds, ported from WordPress.com.
+ *
  * This is not a verbatim copy of WP.com's version.
+ *
+ * @package VIP_Go_WPCOM_Compat
  */
+
 if ( ! function_exists( 'mrss_init' ) ) {
 	add_action( 'template_redirect', 'mrss_init' );
 
+	/**
+	 * Add MediaRSS to RSS2 feeds, unless the request turns it off with ?mrss=off.
+	 */
 	function mrss_init() {
 		if ( ! is_feed() ) {
 			return;
@@ -18,11 +26,19 @@ if ( ! function_exists( 'mrss_init' ) ) {
 		add_action( 'rss2_item', 'mrss_item', 10, 0 );
 	}
 
+	/**
+	 * Print the MediaRSS namespace on the feed's root element.
+	 */
 	function mrss_ns() {
 		?>xmlns:media="http://search.yahoo.com/mrss/"
 		<?php
 	}
 
+	/**
+	 * Print MediaRSS elements for the images and audio in a feed item.
+	 *
+	 * @param string|null $content Item content. Defaults to the current post's content.
+	 */
 	function mrss_item( $content = null ) {
 
 		global $shortcode_tags;
@@ -39,7 +55,7 @@ if ( ! function_exists( 'mrss_init' ) ) {
 		$content        = do_shortcode( $content );
 		$shortcode_tags = $_shortcode_tags;
 
-		// img tags
+		// img tags.
 		if ( preg_match_all( '/<img (.+?)>/', $content, $matches ) ) {
 			foreach ( $matches[1] as $attrs ) {
 				$media = $img = array();
@@ -62,17 +78,17 @@ if ( ! function_exists( 'mrss_init' ) ) {
 			}
 		}
 
-		// audio players
+		// audio players.
 		if ( preg_match_all( '!\[audio (.+)\]!i', $content, $matches ) ) {
 			foreach ( $matches[1] as $url ) {
 				$media = array();
 
 				// New-style media player puts the audio in a src or mp3 attribute.
-				// If we see an attribute starting with a https? url use that instead of the compat stuff below
+				// If we see an attribute starting with a https? url use that instead of the compat stuff below.
 				if ( preg_match( '!\w+="(https?://[^"]+)"!', $url, $attribute_match ) ) {
 					$url = $attribute_match[1];
 				} else {
-					// Remove the audio player config args that start with the pipe symbol (&#124;)
+					// Remove the audio player config args that start with the pipe symbol (&#124;).
 					$url = preg_replace( '/\&#124;.+/', '', $url );
 					$url = html_entity_decode( $url );
 					$url = preg_replace( '/[<>"\']/', '', $url );
@@ -95,7 +111,12 @@ if ( ! function_exists( 'mrss_init' ) ) {
 
 	add_filter( 'mrss_media', 'mrss_featured_image' );
 
-	/* Add featured image, as first item */
+	/**
+	 * Add featured image, as first item.
+	 *
+	 * @param array $meds MediaRSS elements for the item.
+	 * @return array MediaRSS elements, starting with the featured image.
+	 */
 	function mrss_featured_image( $meds ) {
 
 		if ( ! ( function_exists( 'has_post_thumbnail' ) && has_post_thumbnail() ) ) {
@@ -133,12 +154,15 @@ if ( ! function_exists( 'mrss_init' ) ) {
 			}
 		}
 
-		// Add as first item
+		// Add as first item.
 		array_unshift( $meds, $media );
 
 		return $meds;
 	}
 
+	/**
+	 * Print MediaRSS elements for a post on another blog, referenced in this post's custom fields.
+	 */
 	function mrss_news_item() {
 		foreach ( get_post_custom() as $k => $v ) {
 			if ( $k == $v[0] && strpos( $k, ':' ) ) {
@@ -151,6 +175,12 @@ if ( ! function_exists( 'mrss_init' ) ) {
 		mrss_item( $post->post_content );
 	}
 
+	/**
+	 * Print MediaRSS elements.
+	 *
+	 * @param array $element Elements, keyed by name, each with optional attr and children arrays.
+	 * @param int   $indent  Number of tabs to indent by.
+	 */
 	function mrss_print( $element, $indent = 2 ) {
 
 		echo "\n";
@@ -173,7 +203,7 @@ if ( ! function_exists( 'mrss_init' ) ) {
 						if ( ! is_array( $_data ) ) {
 							echo ent2ncr( esc_html( $_data ) );
 						} else {
-							// allow nested same level elements
+							// allow nested same level elements.
 							$nl = true;
 							mrss_print( $_data, $indent + 1 );
 						}
