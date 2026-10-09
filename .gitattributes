@@ -12,6 +12,7 @@
 /.distignore                     export-ignore
 /.editorconfig                   export-ignore
 /.gitattributes                  export-ignore
+/.git-blame-ignore-revs           export-ignore
 /.gitignore                      export-ignore
 /.phpcs.xml.dist                 export-ignore
 /.wp-env.json                    export-ignore
