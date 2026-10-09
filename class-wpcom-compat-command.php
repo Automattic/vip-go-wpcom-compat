@@ -24,7 +24,7 @@ class WPCOM_Compat_Command extends WPCOM_VIP_CLI_Command {
 			WP_CLI::error( sprintf( 'Could not open file: %s', $file ) );
 		}
 
-		$header = fgetcsv( $fd );
+		$header = fgetcsv( $fd, null, ',', '"', '\\' );
 		if ( ! is_array( $header ) || count( $header ) !== 6 ||
 			! in_array( 'id', $header, true ) ||
 			! in_array( 'embed_id', $header, true ) ||
@@ -53,7 +53,7 @@ class WPCOM_Compat_Command extends WPCOM_VIP_CLI_Command {
 		global $wpdb;
 		$success = 0;
 		$errors  = 0;
-		while ( $row = fgetcsv( $fd ) ) {
+		while ( $row = fgetcsv( $fd, null, ',', '"', '\\' ) ) {
 			$data = array_combine( $header, $row );
 			if ( empty( $data ) || ! $data['id'] ) {
 				continue;

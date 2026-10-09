@@ -23,6 +23,12 @@ class Writing_Helper_Draft_Feedback {
 	 */
 	public $shared_post;
 	/**
+	 * Email address of the reviewer whose secret key matched in can_view().
+	 *
+	 * @var string|null
+	 */
+	public $request_email;
+	/**
 	 * Post meta key for feedback on post
 	 */
 	const feedback_metakey = 'draft_feedback';
