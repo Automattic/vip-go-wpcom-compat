@@ -1,0 +1,34 @@
+# Directories
+/.claude/
+/.git/
+/.github/
+/.phpunit.cache/
+/node_modules/
+/tests/
+/vendor/
+
+# Development configuration
+/.distignore
+/.editorconfig
+/.gitattributes
+/.gitignore
+/.phpcs.xml
+/.phpcs.xml.dist
+/.wp-env.json
+/.wp-env.override.json
+
+# Package management
+/composer.json
+/composer.lock
+
+# Documentation (not needed in plugin distribution)
+/AGENTS.md
+/CHANGELOG.md
+/CONTRIBUTING.md
+
+# Test configuration
+/phpunit.xml
+/phpunit.xml.dist
+
+# Caches and logs
+*.log
