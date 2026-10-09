@@ -246,7 +246,8 @@ function wpcom_print_sitemap() {
 
 			// Image node specified in http://support.google.com/webmasters/bin/answer.py?hl=en&answer=178636
 			// These attachments were produced with batch SQL earlier in the script.
-			if ( ! post_password_required( $post->ID ) && $attachments = wp_filter_object_list( $post_attachments, array( 'post_parent' => $post->ID ) ) ) {
+			$attachments = post_password_required( $post->ID ) ? array() : wp_filter_object_list( $post_attachments, array( 'post_parent' => $post->ID ) );
+			if ( $attachments ) {
 
 				$url['image:image'] = array();
 
@@ -272,18 +273,20 @@ function wpcom_print_sitemap() {
 					}
 
 					// Only include title if not empty.
-					if ( $attachment_title = apply_filters( 'the_title_rss', $attachment->post_title ) ) {
+					$attachment_title = apply_filters( 'the_title_rss', $attachment->post_title );
+					if ( $attachment_title ) {
 						$url['image:image']['title'] = html_entity_decode( esc_html( $attachment_title ), ENT_XML1 );
 					}
 
 					// Only include caption if not empty.
-					if ( $attachment_caption = apply_filters( 'the_excerpt_rss', $attachment->post_excerpt ) ) {
+					$attachment_caption = apply_filters( 'the_excerpt_rss', $attachment->post_excerpt );
+					if ( $attachment_caption ) {
 						$url['image:image']['caption'] = html_entity_decode( esc_html( $attachment_caption ), ENT_XML1 );
 					}
 				}
 			}
 
-			if ( $post->post_modified_gmt && $post->post_modified_gmt != '0000-00-00 00:00:00' ) {
+			if ( $post->post_modified_gmt && '0000-00-00 00:00:00' != $post->post_modified_gmt ) {
 				$post_latest_mod = $post->post_modified_gmt;
 			}
 			if ( $post->comment_count > 0 ) {
@@ -301,7 +304,7 @@ function wpcom_print_sitemap() {
 				$url['lastmod'] = w3cdate_from_mysql( $post_latest_mod );
 			}
 			unset( $post_latest_mod );
-			if ( $post->post_type == 'page' ) {
+			if ( 'page' == $post->post_type ) {
 				$url['changefreq'] = 'weekly';
 				$url['priority']   = '0.6'; // set page priority above default priority of 0.5.
 			} else {
@@ -558,9 +561,9 @@ if ( ! function_exists( 'is_publicly_available' ) || is_publicly_available() ) {
 
 	$protocol    = is_ssl() ? 'https://' : 'http://';
 	$request_url = isset( $_SERVER['HTTP_HOST'] ) ? $protocol . $_SERVER['HTTP_HOST'] . $_SERVER['REQUEST_URI'] : '';
-	if ( $request_url == home_url( 'sitemap.xml' ) ) {
+	if ( home_url( 'sitemap.xml' ) == $request_url ) {
 		add_action( 'init', __NAMESPACE__ . '\\wpcom_print_sitemap', 999 ); // run later so things like custom post types have been registered.
-	} elseif ( $request_url == home_url( 'news-sitemap.xml' ) ) {
+	} elseif ( home_url( 'news-sitemap.xml' ) == $request_url ) {
 		add_action( 'init', __NAMESPACE__ . '\\wpcom_print_news_sitemap', 999 ); // run later so things like custom post types have been registered.
 
 	}

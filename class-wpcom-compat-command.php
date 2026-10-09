@@ -22,7 +22,7 @@ class WPCOM_Compat_Command extends WPCOM_VIP_CLI_Command {
 	 *
 	 * @param array $args Positional arguments.
 	 */
-	function import_protected_embeds( $args ) {
+	public function import_protected_embeds( $args ) {
 		list( $file ) = $args;
 
 		if ( ! file_exists( $file ) ) {

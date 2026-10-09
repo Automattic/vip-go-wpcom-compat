@@ -18,7 +18,7 @@ if ( ! function_exists( 'mrss_init' ) ) {
 			return;
 		}
 
-		if ( isset( $_GET['mrss'] ) && $_GET['mrss'] == 'off' ) {
+		if ( isset( $_GET['mrss'] ) && 'off' == $_GET['mrss'] ) {
 			return;
 		}
 
@@ -58,7 +58,8 @@ if ( ! function_exists( 'mrss_init' ) ) {
 		// img tags.
 		if ( preg_match_all( '/<img (.+?)>/', $content, $matches ) ) {
 			foreach ( $matches[1] as $attrs ) {
-				$media = $img = array();
+				$media = array();
+				$img   = array();
 				foreach ( wp_kses_hair( $attrs, array( 'http', 'https' ) ) as $attr ) {
 					$img[ $attr['name'] ] = $attr['value'];
 				}
