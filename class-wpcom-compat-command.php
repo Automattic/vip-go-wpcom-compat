@@ -1,5 +1,13 @@
 <?php
+/**
+ * WP-CLI commands for sites that moved from WordPress.com.
+ *
+ * @package VIP_Go_WPCOM_Compat
+ */
 
+/**
+ * WordPress.com compatibility commands.
+ */
 class WPCOM_Compat_Command extends WPCOM_VIP_CLI_Command {
 
 	/**
@@ -11,8 +19,10 @@ class WPCOM_Compat_Command extends WPCOM_VIP_CLI_Command {
 	 * : The CSV file to import
 	 *
 	 * @subcommand import-protected-embeds
+	 *
+	 * @param array $args Positional arguments.
 	 */
-	function import_protected_embeds( $args ) {
+	public function import_protected_embeds( $args ) {
 		list( $file ) = $args;
 
 		if ( ! file_exists( $file ) ) {
