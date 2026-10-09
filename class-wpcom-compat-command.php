@@ -29,7 +29,7 @@ class WPCOM_Compat_Command extends WPCOM_VIP_CLI_Command {
 			WP_CLI::error( 'Specified file does not exist' );
 		}
 
-		$fd = fopen( $file, 'r' );
+		$fd = fopen( $file, 'r' ); // phpcs:ignore WordPress.WP.AlternativeFunctions.file_system_operations_fopen -- Reads the CSV from wherever the user put it, not the uploads directory.
 		if ( ! $fd ) {
 			WP_CLI::error( sprintf( 'Could not open file: %s', $file ) );
 		}
@@ -69,7 +69,7 @@ class WPCOM_Compat_Command extends WPCOM_VIP_CLI_Command {
 				continue;
 			}
 
-			$insert = $wpdb->insert( 'protected_embeds', $data );
+			$insert = $wpdb->insert( 'protected_embeds', $data ); // phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery -- The plugin's own table.
 			if ( ! $insert ) {
 				WP_CLI::warning( "Could not insert embed: `{$data['id']}`" );
 				WP_CLI::warning( $wpdb->last_error );

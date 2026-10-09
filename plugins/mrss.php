@@ -18,7 +18,7 @@ if ( ! function_exists( 'mrss_init' ) ) {
 			return;
 		}
 
-		if ( isset( $_GET['mrss'] ) && 'off' == $_GET['mrss'] ) {
+		if ( isset( $_GET['mrss'] ) && 'off' == $_GET['mrss'] ) { // phpcs:ignore WordPress.Security.NonceVerification.Recommended -- Read-only switch for the feed's output.
 			return;
 		}
 
@@ -45,7 +45,7 @@ if ( ! function_exists( 'mrss_init' ) ) {
 
 		$meds            = array();
 		$_shortcode_tags = $shortcode_tags;
-		$shortcode_tags  = array( 'gallery' => 'gallery_shortcode' );
+		$shortcode_tags  = array( 'gallery' => 'gallery_shortcode' ); // phpcs:ignore WordPress.WP.GlobalVariablesOverride.Prohibited -- Only run [gallery]; restored below.
 
 		if ( ! isset( $content ) ) {
 			$content = get_the_content();
@@ -53,7 +53,7 @@ if ( ! function_exists( 'mrss_init' ) ) {
 
 		$content        = apply_filters( 'the_content_rss', $content );
 		$content        = do_shortcode( $content );
-		$shortcode_tags = $_shortcode_tags;
+		$shortcode_tags = $_shortcode_tags; // phpcs:ignore WordPress.WP.GlobalVariablesOverride.Prohibited -- Restores the original shortcodes.
 
 		// img tags.
 		if ( preg_match_all( '/<img (.+?)>/', $content, $matches ) ) {
@@ -137,10 +137,10 @@ if ( ! function_exists( 'mrss_init' ) ) {
 		}
 
 		$thumbnail = get_post( $thumb_id );
-		$title     = trim( strip_tags( $thumbnail->post_title ?? '' ) );
+		$title     = trim( strip_tags( $thumbnail->post_title ?? '' ) ); // phpcs:ignore WordPressVIPMinimum.Functions.StripTags.StripTagsOneParameter -- wp_strip_all_tags() would change the feed's output.
 
 		if ( empty( $title ) ) {
-			$title = trim( strip_tags( get_post_meta( $thumb_id, '_wp_attachment_image_alt', true ) ) );
+			$title = trim( strip_tags( get_post_meta( $thumb_id, '_wp_attachment_image_alt', true ) ) ); // phpcs:ignore WordPressVIPMinimum.Functions.StripTags.StripTagsOneParameter -- wp_strip_all_tags() would change the feed's output.
 		}
 
 		if ( ! empty( $title ) ) {
@@ -188,10 +188,10 @@ if ( ! function_exists( 'mrss_init' ) ) {
 
 		foreach ( (array) $element as $name => $data ) {
 
-			echo str_repeat( "\t", $indent ) . "<media:$name";
+			echo str_repeat( "\t", $indent ) . "<media:$name"; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- Names are set in code or by the mrss_media filter; values are escaped.
 			if ( ! empty( $data['attr'] ) ) {
 				foreach ( $data['attr'] as $attr => $value ) {
-					echo " $attr=\"" . ent2ncr( esc_attr( $value ) ) . '"';
+					echo " $attr=\"" . ent2ncr( esc_attr( $value ) ) . '"'; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- Names are set in code or by the mrss_media filter; values are escaped.
 				}
 			}
 			if ( ! empty( $data['children'] ) ) {
@@ -215,10 +215,10 @@ if ( ! function_exists( 'mrss_init' ) ) {
 				}
 
 				if ( $nl ) {
-					echo str_repeat( "\t", $indent );
+					echo str_repeat( "\t", $indent ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- Names are set in code or by the mrss_media filter; values are escaped.
 				}
 
-				echo "</media:$name>\n";
+				echo "</media:$name>\n"; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- Names are set in code or by the mrss_media filter; values are escaped.
 			} else {
 				echo " />\n";
 			}
