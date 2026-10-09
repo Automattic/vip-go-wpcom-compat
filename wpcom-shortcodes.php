@@ -6,6 +6,15 @@
  */
 
 /**
+ * The table protected embeds are stored in, shared by the shortcode and the import command.
+ *
+ * @return string Table name.
+ */
+function wpcom_compat_protected_embed_table() {
+	return apply_filters( 'wpcom_protected_embed_table', 'wp_protected_embeds' );
+}
+
+/**
  * Provides simple backwards compatability with WordPress.com Protected Embeds.
  * This does NOT provide the "protection" of the protected embeds, just renders them.
  *
@@ -23,7 +32,7 @@ function wpcom_compat_protected_iframe_shortcode( $attrs ) {
 		)
 	);
 
-	$embed_table     = apply_filters( 'wpcom_protected_embed_table', 'wp_protected_embeds' );
+	$embed_table     = wpcom_compat_protected_embed_table();
 	$embed_not_found = apply_filters( 'wpcom_protected_embed_not_found', '<!-- Embed not found -->' );
 
 	if ( ! $attrs['id'] ) {
