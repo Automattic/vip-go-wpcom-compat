@@ -7,7 +7,8 @@ Compatibility shims for sites that moved from WordPress.com VIP to the WordPress
 ```bash
 composer lint                # PHP syntax
 composer cs                  # PHPCS (CI fails on violations)
-npx wp-env start             # Local environment
+npm ci                       # Install the pinned wp-env
+npx --no wp-env start        # Local environment
 composer test:integration    # Integration tests (needs wp-env)
 composer test:integration-ms # Multisite integration tests (needs wp-env)
 ```

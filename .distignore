@@ -21,6 +21,8 @@
 # Package management
 /composer.json
 /composer.lock
+/package.json
+/package-lock.json
 
 # Documentation (not needed in plugin distribution)
 /AGENTS.md
