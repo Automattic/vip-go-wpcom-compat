@@ -43,8 +43,8 @@
 		"cs-fix": "@php ./vendor/bin/phpcbf -q",
 		"lint": "@php ./vendor/php-parallel-lint/php-parallel-lint/parallel-lint . -e php --exclude vendor --exclude .git",
 		"lint-ci": "@php ./vendor/php-parallel-lint/php-parallel-lint/parallel-lint . -e php --exclude vendor --exclude .git --checkstyle",
-		"test:integration": "npx wp-env run cli --env-cwd=wp-content/plugins/$(basename \"$PWD\") ./vendor/bin/phpunit --testsuite integration",
-		"test:integration-ms": "npx wp-env run cli --env-cwd=wp-content/plugins/$(basename \"$PWD\") /bin/bash -c 'WP_MULTISITE=1 ./vendor/bin/phpunit --testsuite integration'"
+		"test:integration": "npx --no wp-env run cli --env-cwd=wp-content/plugins/$(basename \"$PWD\") ./vendor/bin/phpunit --testsuite integration",
+		"test:integration-ms": "npx --no wp-env run cli --env-cwd=wp-content/plugins/$(basename \"$PWD\") /bin/bash -c 'WP_MULTISITE=1 ./vendor/bin/phpunit --testsuite integration'"
 	},
 	"scripts-descriptions": {
 		"coverage": "Run tests with code coverage reporting",

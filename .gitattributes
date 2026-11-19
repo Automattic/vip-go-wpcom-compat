@@ -20,6 +20,8 @@
 /CHANGELOG.md                    export-ignore
 /CONTRIBUTING.md                 export-ignore
 /composer.json                   export-ignore
+/package.json                    export-ignore
+/package-lock.json               export-ignore
 /phpunit.xml.dist                export-ignore
 
 # Auto detect text files and perform LF normalization
